@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JBS | 중동중학교 방송부</title>
+    <script src="https://unpkg.com/bad-words@3.0.4/lib/bad-words.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --toss-blue: #3182f6;
+            --toss-blue-hover: #1b64da;
+            --toss-grey-bg: #f2f4f6;
+            --toss-card: #ffffff;
+            --toss-text: #191f28;
+            --toss-sub-text: #4e5968;
+            --toss-border: #e5e8eb;
+            --toss-red: #f04452;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0; padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+            background-color: var(--toss-grey-bg);
+            color: var(--toss-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 네비게이션 - PC 대응 */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            border-bottom: 1px solid var(--toss-border);
+        }
+
+        .nav-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-size: 22px; font-weight: 800; color: var(--toss-blue); letter-spacing: -0.5px; cursor: pointer;}
+
+        .admin-login-btn {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--toss-sub-text);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            background: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .admin-login-btn:hover { background: var(--toss-grey-bg); transform: scale(0.98); }
+        .admin-login-btn:active { transform: scale(0.95); }
+
+        .main-wrapper {
+            max-width: 1000px;
+            margin: 80px auto 100px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+        }
+
+        @media (max-width: 850px) {
+            .main-wrapper { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .hero h1 { font-size: 24px !important; }
+            .hero p { font-size: 16px !important; }
+            
+            /* 관리자 페이지 모바일 최적화 */
+            .dash-table thead { display: none; }
+            .dash-table, .dash-table tbody, .dash-table tr, .dash-table td { display: block; width: 100%; }
+            .dash-table tr { margin-bottom: 16px; padding: 16px; background: #f9fafb; border-radius: 16px; border: 1px solid var(--toss-border); }
+            .dash-table td { padding: 4px 0; border: none; }
+            .dash-table td:before { content: attr(data-label); font-weight: 700; color: var(--toss-sub-text); margin-right: 8px; font-size: 13px; }
+            .delete-btn { width: 100%; margin-top: 10px; padding: 12px; }
+        }
+
+        .card {
+            background: var(--toss-card);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.02);
+        }
+
+        .card-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+
+        .hero {
+            grid-column: 1 / -1;
+            padding: 50px 40px;
+            background: var(--toss-card);
+        }
+        .hero h1 { font-size: 32px; font-weight: 800; line-height: 1.3; }
+        .hero p { color: var(--toss-sub-text); margin-top: 15px; font-size: 18px; }
+
+        /* 이미지 기반 기능 그리드 스타일 추가 */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 600px) {
+            .feature-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 8px;
+            background: var(--toss-card);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-item:hover { background: #f9fafb; transform: translateY(-2px); }
+        .feature-item i { color: var(--toss-blue); margin-bottom: 8px; width: 24px; height: 24px; }
+        .feature-item span { font-size: 13px; font-weight: 600; color: var(--toss-text); }
+
+        .schedule-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--toss-grey-bg);
+        }
+        .schedule-item:last-child { border: none; }
+        .time { font-weight: 600; color: var(--toss-blue); width: 80px; }
+
+        .dept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .dept-item {
+            padding: 20px;
+            background: var(--toss-grey-bg);
+            border-radius: 16px;
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+        }
+        .dept-item:hover { transform: translateY(-5px); }
+        .dept-icon { font-size: 24px; margin-bottom: 8px; display: block; }
+
+        .apply-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: var(--toss-blue);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .apply-btn:hover { background: var(--toss-blue-hover); transform: scale(1.02); }
+        .apply-btn:active { transform: scale(0.96); }
+
+        /* 클릭 애니메이션 효과 */
+        .ripple {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.1);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            border-radius: 50%;
+            animation: ripple-effect 0.6s ease-out;
+        }
+        @keyframes ripple-effect {
+            from { width: 0; height: 0; opacity: 0.5; }
+            to { width: 500px; height: 500px; opacity: 0; }
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 24px; left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 400px;
+            z-index: 90;
+        }
+
+        .full-modal {
+            position: fixed; inset: 0;
+            background-color: #fff;
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            padding: 60px 24px 40px;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(100%);
+            overflow-y: auto;
+        }
+        .full-modal.active {
+            display: flex;
+            transform: translateX(0);
+        }
+
+        /* 로그인 에러 전용 모달 스타일 (화면 중앙) */
+        .error-modal {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: #fff;
+            z-index: 400;
+            width: calc(100% - 48px);
+            max-width: 340px;
+            border-radius: 24px;
+            padding: 30px;
+            display: none;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            opacity: 0;
+            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .error-modal.active { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .error-dim { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 399; display: none; }
+
+        .modal-content { max-width: 500px; margin: 0 auto; width: 100%; }
+        .close-x { position: absolute; top: 20px; right: 24px; font-size: 28px; cursor: pointer; border:none; background:none;}
+
+        input, textarea {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid var(--toss-border);
+            background: var(--toss-grey-bg);
+            font-size: 16px;
+            margin-bottom: 12px;
+            transition: 0.2s;
+        }
+        input:focus { outline: none; border-color: var(--toss-blue); background: #fff; }
+
+        #successOverlay {
+            display: none; position: fixed; inset: 0;
+            background: white; z-index: 300;
+            flex-direction: column; justify-content: center; align-items: center;
+        }
+        .check-circle {
+            width: 80px; height: 80px;
+            background: var(--toss-blue);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            transform: scale(0);
+            animation: bounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.5) forwards;
+        }
+        .check-path {
+            stroke: white; stroke-width: 5; fill: none;
+            stroke-dasharray: 50; stroke-dashoffset: 50;
+            animation: draw 0.4s 0.4s ease-out forwards;
+        }
+        @keyframes bounce { to { transform: scale(1); } }
+        @keyframes draw { to { stroke-dashoffset: 0; } }
+
+        /* 관리자 페이지 꾸미기 */
+        .dash-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .dash-table th, .dash-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--toss-border); }
+        .dash-table th { font-size: 14px; color: var(--toss-sub-text); background: #f9fafb; }
+        .dash-table tr:hover { background-color: #fafafa; }
+        
+        .filter-tabs { display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
+        .tab { padding: 10px 20px; background: #e5e8eb; border-radius: 12px; cursor: pointer; font-size: 14px; border: none; font-weight: 600; color: #4e5968; transition: 0.2s; white-space: nowrap; }
+        .tab.active { background: var(--toss-blue); color: white; }
+
+        .delete-btn {
+            background: #ffe0e3;
+            color: var(--toss-red);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .delete-btn:hover { background: var(--toss-red); color: white; }
+
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .nickname { font-weight: 700; color: var(--toss-text); font-size: 15px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-content">
+        <div class="logo" onclick="location.href='/'">JBS</div>
+        <div class="user-info" id="navAuthArea">
+            <div style="font-weight: 600; font-size: 15px;" class="pc-only">중동중학교 방송부</div>
+            <button class="admin-login-btn" onclick="openModal('adminModal')">로그인</button>
+        </div>
+    </div>
+</nav>
+
+<div class="main-wrapper" id="mainPage">
+    <section class="hero card">
+        <h1>오늘 점심시간,<br>여러분의 플레이리스트를 채워드릴게요.</h1>
+        <p>중동의 모든 소식을 가장 빠르게, JBS 방송국</p>
+    </section>
+
+    <div class="content-area">
+        <div class="feature-grid">
+            <button class="feature-item" onclick="openModal('applyModal')"><i data-lucide="music"></i><span>음악 신청</span></button>
+            <button class="feature-item" onclick="mockAction('공지사항')"><i data-lucide="megaphone"></i><span>공지사항</span></button>
+            <button class="feature-item" onclick="mockAction('실시간 방송')"><i data-lucide="radio"></i><span>실시간 방송</span></button>
+            <button class="feature-item" onclick="mockAction('커뮤니티')"><i data-lucide="users"></i><span>커뮤니티</span></button>
+            <button class="feature-item" onclick="mockAction('갤러리')"><i data-lucide="image"></i><span>갤러리</span></button>
+            <button class="feature-item" onclick="mockAction('일정')"><i data-lucide="calendar"></i><span>일정</span></button>
+            <button class="feature-item" onclick="mockAction('랭킹')"><i data-lucide="trophy"></i><span>랭킹</span></button>
+            <button class="feature-item" onclick="mockAction('지난 방송')"><i data-lucide="history"></i><span>지난 방송</span></button>
+            <button class="feature-item" onclick="mockAction('건의함')"><i data-lucide="message-square"></i><span>건의함</span></button>
+            <button class="feature-item" onclick="mockAction('FAQ')"><i data-lucide="help-circle"></i><span>FAQ</span></button>
+            <button class="feature-item" onclick="mockAction('자료실')"><i data-lucide="folder-open"></i><span>자료실</span></button>
+            <button class="feature-item" onclick="mockAction('사용자')"><i data-lucide="user"></i><span>사용자</span></button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">오늘의 방송 시간표</div>
+            <div class="schedule-item"><span class="time">12:35</span><span>정규 오프닝 및 학교 소식 전달</span></div>
+            <div class="schedule-item"><span class="time">12:45</span><span>학생 신청곡 큐레이션 [진행: 이중동 아나운서]</span></div>
+            <div class="schedule-item"><span class="time">13:05</span><span>자율 청취 및 클로징</span></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">부서 안내</div>
+            <div class="dept-grid">
+                <div class="dept-item"><span class="dept-icon">🎤</span><strong>아나운서</strong><p style="font-size: 13px; color: var(--toss-sub-text); margin-top: 5px;">방송 진행 및 대본 작성</p></div>
+                <div class="dept-item"><span class="dept-icon">🎧</span><strong>엔지니어</strong><p style="font-size: 13px; color: var(--toss-sub-text); margin-top: 5px;">음향 믹싱 및 장비 운용</p></div>
+                <div class="dept-item"><span class="dept-icon">🎬</span><strong>영상제작</strong><p style="font-size: 13px; color: var(--toss-sub-text); margin-top: 5px;">학교 행사 및 영상 편집</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="card" style="position: sticky; top: 100px;">
+            <div class="card-title">음악 신청</div>
+            <p style="font-size: 14px; color: var(--toss-sub-text); margin-bottom: 20px;">지금 바로 신청곡을 보내보세요.<br>선정된 곡은 점심시간에 방송됩니다.</p>
+            <button class="apply-btn" onclick="openModal('applyModal')">곡 신청하기</button>
+        </div>
+    </div>
+</div>
+
+<div class="main-wrapper" id="adminDashboard" style="display: none; grid-template-columns: 1fr;">
+    <div class="card">
+        <div class="card-title">JBS 신청곡 대시보드</div>
+        <div class="filter-tabs">
+            <button class="tab active" onclick="filterData('all', this)">전체</button>
+            <button class="tab" onclick="filterData('week', this)">이번 주</button>
+            <button class="tab" onclick="filterData('today', this)">오늘</button>
+        </div>
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+            <table class="dash-table">
+                <thead><tr><th>시간</th><th>제목</th><th>가수</th><th>사연</th><th>동작</th></tr></thead>
+                <tbody id="adminDataTable"></tbody>
+            </table>
+        </div>
+        <button class="admin-login-btn" onclick="handleLogout()" style="margin-top:20px; color: var(--toss-red)">로그아웃</button>
+    </div>
+</div>
+
+<div class="floating-action" id="mobileAction"><button class="apply-btn" onclick="openModal('applyModal')">노래 신청하기</button></div>
+
+<div id="applyModal" class="full-modal">
+    <button class="close-x" onclick="closeModal('applyModal')">✕</button>
+    <div class="modal-content">
+        <h2 style="font-size: 26px; margin-bottom: 8px;">듣고 싶은 노래를<br>알려주세요</h2>
+        <p style="color: var(--toss-sub-text); margin-bottom: 32px;">신청하신 곡은 사연과 함께 방송됩니다.</p>
+        <label style="font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px;">곡 제목</label>
+        <input type="text" id="songTitle" placeholder="제목을 입력해주세요">
+        <label style="font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px;">가수</label>
+        <input type="text" id="artist" placeholder="가수를 입력해주세요">
+        <label style="font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px;">사연 (선택)</label>
+        <textarea rows="4" id="story" placeholder="방송에 읽어드릴 사연을 적어주세요"></textarea>
+        <div style="margin-top: 20px;"><button class="apply-btn" onclick="submitMusic()">신청 완료</button></div>
+    </div>
+</div>
+
+<div id="adminModal" class="full-modal">
+    <button class="close-x" onclick="closeModal('adminModal')">✕</button>
+    <div class="modal-content">
+        <h2 style="font-size: 26px; margin-bottom: 8px;">로그인</h2>
+        <p style="color: var(--toss-sub-text); margin-bottom: 32px;">계정 정보를 입력하여 로그인하세요.</p>
+        <label style="font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px;">아이디</label>
+        <input type="text" id="adminId" placeholder="아이디를 입력해주세요">
+        <label style="font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px;">비밀번호</label>
+        <input type="password" id="adminPw" placeholder="비밀번호를 입력해주세요">
+        <div style="margin-top: 20px;"><button class="apply-btn" onclick="handleAdminLogin()">로그인</button></div>
+    </div>
+</div>
+
+<div id="errorDim" class="error-dim" onclick="closeErrorModal()"></div>
+<div id="errorModal" class="error-modal">
+    <h3 id="errorTitle" style="font-size: 20px; margin-bottom: 12px; font-weight: 800;">안내</h3>
+    <p id="errorMsg" style="color: var(--toss-sub-text); margin-bottom: 24px; font-size: 15px;"></p>
+    <button class="apply-btn" onclick="closeErrorModal()" style="padding: 14px;">확인</button>
+</div>
+
+<div id="successOverlay">
+    <div class="check-circle" id="overlayIconCircle">
+        <svg id="successSvg" width="40" height="40" viewBox="0 0 52 52" style="display:none;"><path class="check-path" d="M14 27l7 7 17-17"/></svg>
+        <svg id="failSvg" width="40" height="40" viewBox="0 0 52 52" style="display:none;"><path class="check-path" d="M16 16l20 20M36 16L16 36"/></svg>
+    </div>
+    <h2 id="successText" style="margin-top: 24px; font-weight: 700; text-align: center; padding: 0 20px;">신청이 완료됐어요</h2>
+</div>
+
+<script>
+    const BASE_URL = 'https://jbsserver.pythonanywhere.com'; 
+    const API_KEY = "JBS_INTERNAL_SECURE_KEY_2024";
+    let allData = [];
+
+    // Lucide 아이콘 초기화
+    lucide.createIcons();
+
+    // 욕설 필터 설정
+    const filter = new Filter();
+    const koBadWords = ['시발', '지랄', '개새끼', '병신', '미친', '노무', '일베'];
+    filter.addWords(...koBadWords);
+
+    // 클릭 애니메이션
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.apply-btn, .admin-login-btn, .delete-btn, .tab, .feature-item');
+        if (btn) {
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            const rect = btn.getBoundingClientRect();
+            ripple.style.left = `${e.clientX - rect.left}px`;
+            ripple.style.top = `${e.clientY - rect.top}px`;
+            btn.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        }
+    });
+
+    // 모달 관리
+    function openModal(id) {
+        const target = document.getElementById(id);
+        target.style.display = 'flex';
+        setTimeout(() => target.classList.add('active'), 10);
+        document.body.style.overflow = 'hidden';
+        window.history.pushState({ modal: id }, '', '#' + id);
+    }
+
+    function closeModal(id) {
+        const target = document.getElementById(id);
+        if (!target) return;
+        target.classList.remove('active');
+        setTimeout(() => { target.style.display = 'none'; }, 400);
+        document.body.style.overflow = 'auto';
+        if(window.location.hash === '#' + id) window.history.back();
+    }
+
+    // 모의 작동 알림
+    function mockAction(name) {
+        showToast(`'${name}' 기능은 준비 중입니다.`);
+    }
+
+    // 에러 전용 모달 (중앙 배치)
+    function showErrorModal(msg) {
+        document.getElementById('errorMsg').innerText = msg;
+        document.getElementById('errorDim').style.display = 'block';
+        document.getElementById('errorModal').style.display = 'block';
+        setTimeout(() => document.getElementById('errorModal').classList.add('active'), 10);
+    }
+
+    function closeErrorModal() {
+        document.getElementById('errorModal').classList.remove('active');
+        setTimeout(() => {
+            document.getElementById('errorModal').style.display = 'none';
+            document.getElementById('errorDim').style.display = 'none';
+        }, 300);
+    }
+
+    // 뒤로가기 제어 수정
+    window.onpopstate = function(event) {
+        const activeModals = document.querySelectorAll('.full-modal.active');
+        activeModals.forEach(m => {
+            m.classList.remove('active');
+            setTimeout(() => { m.style.display = 'none'; }, 400);
+        });
+        document.body.style.overflow = 'auto';
+    };
+
+    // 알림용 오버레이 (X 애니메이션 포함)
+    function showToast(text, isError = false) {
+        const overlay = document.getElementById('successOverlay');
+        const sText = document.getElementById('successText');
+        const circle = document.getElementById('overlayIconCircle');
+        const successSvg = document.getElementById('successSvg');
+        const failSvg = document.getElementById('failSvg');
+        
+        sText.innerText = text;
+        circle.style.backgroundColor = isError ? 'var(--toss-red)' : 'var(--toss-blue)';
+        successSvg.style.display = isError ? 'none' : 'block';
+        failSvg.style.display = isError ? 'block' : 'none';
+        
+        overlay.style.display = 'flex';
+        setTimeout(() => { overlay.style.display = 'none'; }, 2000);
+    }
+
+    async function submitMusic() {
+        const title = document.getElementById('songTitle').value;
+        const artist = document.getElementById('artist').value;
+        const story = document.getElementById('story').value;
+
+        if(!title || !artist) { showToast('곡 제목과 가수를 입력해주세요!', true); return; }
+        if(filter.isProfane(title) || filter.isProfane(artist) || filter.isProfane(story)) {
+            showToast('욕설이 포함되었습니다.', true); return;
+        }
+
+        try {
+            const response = await fetch(`${BASE_URL}/api/request`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
+                body: JSON.stringify({ title, artist, story })
+            });
+            if(response.ok) {
+                showToast("신청이 완료됐어요");
+                closeModal('applyModal');
+                document.getElementById('songTitle').value = '';
+                document.getElementById('artist').value = '';
+                document.getElementById('story').value = '';
+            }
+        } catch (e) { showToast('서버 통신 오류가 발생했습니다.', true); }
+    }
+
+    async function handleAdminLogin() {
+        const id = document.getElementById('adminId').value;
+        const pw = document.getElementById('adminPw').value;
+        if(!id || !pw) { showErrorModal('정보를 모두 입력해주세요.'); return; }
+
+        try {
+            const response = await fetch(`${BASE_URL}/api/admin/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
+                body: JSON.stringify({ id, pw })
+            });
+            const resData = await response.json();
+            if(response.ok && resData.admin_token) {
+                localStorage.setItem('adminToken', resData.admin_token);
+                localStorage.setItem('userNickname', id);
+                showToast("로그인에 성공했어요");
+                closeModal('adminModal');
+                updateAuthUI();
+                if(id === 'admin') showDashboard();
+            } else { showErrorModal("로그인 정보가 틀렸습니다."); }
+        } catch (e) { showErrorModal('서버 통신 오류가 발생했습니다.'); }
+    }
+
+    function handleLogout() {
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('userNickname');
+        location.reload();
+    }
+
+    function updateAuthUI() {
+        const nick = localStorage.getItem('userNickname');
+        const authArea = document.getElementById('navAuthArea');
+        if(nick) {
+            authArea.innerHTML = `
+                <span class="nickname">${nick}님</span>
+                <button class="admin-login-btn" onclick="handleLogout()" style="color: var(--toss-red)">로그아웃</button>
+            `;
+        }
+    }
+
+    async function showDashboard() {
+        const token = localStorage.getItem('adminToken');
+        if(!token) return;
+
+        document.getElementById('mainPage').style.display = 'none';
+        document.getElementById('mobileAction').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'grid';
+        
+        try {
+            const response = await fetch(`${BASE_URL}/api/admin/data`, {
+                headers: { 'X-JBS-KEY': API_KEY, 'X-Admin-Token': token }
+            });
+            if(!response.ok) { handleLogout(); return; }
+            allData = await response.json();
+            renderTable(allData);
+        } catch (e) { showToast('데이터 로드 실패', true); }
+    }
+
+    function renderTable(data) {
+        const tableBody = document.getElementById('adminDataTable');
+        tableBody.innerHTML = '';
+        data.forEach(item => {
+            const date = new Date(item.timestamp).toLocaleDateString();
+            tableBody.innerHTML += `
+                <tr>
+                    <td data-label="시간" style="font-size:12px; color:var(--toss-sub-text)">${date}</td>
+                    <td data-label="제목" style="font-weight:600">${item.title}</td>
+                    <td data-label="가수">${item.artist}</td>
+                    <td data-label="사연" style="font-size:13px">${item.story || '-'}</td>
+                    <td data-label="동작"><button class="delete-btn" onclick="deleteRequest(${item.id})">삭제</button></td>
+                </tr>`;
+        });
+    }
+
+    function filterData(type, btn) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        const now = new Date();
+        let filtered = allData;
+
+        if(type === 'today') {
+            filtered = allData.filter(d => new Date(d.timestamp).toDateString() === now.toDateString());
+        } else if(type === 'week') {
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            filtered = allData.filter(d => new Date(d.timestamp) > weekAgo);
+        }
+        renderTable(filtered);
+    }
+
+    async function deleteRequest(id) {
+        if(!confirm('정말 삭제하시겠습니까?')) return;
+        const token = localStorage.getItem('adminToken');
+        try {
+            const response = await fetch(`${BASE_URL}/api/admin/delete/${id}`, {
+                method: 'DELETE',
+                headers: { 'X-JBS-KEY': API_KEY, 'X-Admin-Token': token }
+            });
+            if(response.ok) { showDashboard(); }
+        } catch (e) { showToast('삭제 실패', true); }
+    }
+
+    function checkMobileButton() {
+        const mobileAction = document.getElementById('mobileAction');
+        const isDashboard = document.getElementById('adminDashboard').style.display === 'grid';
+        if(window.innerWidth > 850 || isDashboard) { mobileAction.style.display = 'none'; } 
+        else { mobileAction.style.display = 'block'; }
+    }
+
+    window.addEventListener('resize', checkMobileButton);
+    window.addEventListener('load', () => {
+        updateAuthUI();
+        checkMobileButton();
+        if(localStorage.getItem('userNickname') === 'admin') showDashboard();
+    });
+</script>
+</body>
+</html>
