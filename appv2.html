@@ -6,7 +6,6 @@
     <title>JBS | 중동중학교 방송부</title>
     <script src="https://unpkg.com/bad-words@3.0.4/lib/bad-words.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         :root {
             --toss-blue: #3182f6;
@@ -17,13 +16,10 @@
             --toss-sub-text: #4e5968;
             --toss-border: #e5e8eb;
             --toss-red: #f04452;
+            --warn-orange: #ff9500;
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            margin: 0; padding: 0;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
@@ -34,57 +30,37 @@
         }
 
         nav {
-            position: fixed;
-            top: 0; width: 100%;
-            background: rgba(255, 255, 255, 0.85);
+            position: fixed; top: 0; width: 100%;
+            background: rgba(255,255,255,0.85);
             backdrop-filter: blur(15px);
             z-index: 100;
             border-bottom: 1px solid var(--toss-border);
         }
-
         .nav-content {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1000px; margin: 0 auto; padding: 16px 20px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        .logo { font-size: 22px; font-weight: 800; color: var(--toss-blue); letter-spacing: -0.5px; cursor: pointer;}
-
+        .logo { font-size: 22px; font-weight: 800; color: var(--toss-blue); letter-spacing: -0.5px; cursor: pointer; }
         .admin-login-btn {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--toss-sub-text);
-            text-decoration: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            border: none;
-            background: none;
-            position: relative;
-            overflow: hidden;
+            font-size: 14px; font-weight: 600; color: var(--toss-sub-text);
+            padding: 8px 12px; border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+            cursor: pointer; border: none; background: none;
+            position: relative; overflow: hidden;
         }
         .admin-login-btn:hover { background: var(--toss-grey-bg); transform: scale(0.98); }
         .admin-login-btn:active { transform: scale(0.95); }
 
         .main-wrapper {
-            max-width: 1000px;
-            margin: 80px auto 100px;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 24px;
+            max-width: 1000px; margin: 80px auto 100px; padding: 20px;
+            display: grid; grid-template-columns: 1fr 340px; gap: 24px;
         }
 
         @media (max-width: 850px) {
             .main-wrapper { grid-template-columns: 1fr; }
             .sidebar { display: none; }
             .hero h1 { font-size: 24px !important; }
-            .hero p { font-size: 16px !important; }
-            
+            .hero p  { font-size: 16px !important; }
             .dash-table thead { display: none; }
             .dash-table, .dash-table tbody, .dash-table tr, .dash-table td { display: block; width: 100%; }
             .dash-table tr { margin-bottom: 16px; padding: 16px; background: #f9fafb; border-radius: 16px; border: 1px solid var(--toss-border); }
@@ -93,217 +69,171 @@
             .delete-btn { width: 100%; margin-top: 10px; padding: 12px; }
         }
 
-        .card {
-            background: var(--toss-card);
-            border-radius: 24px;
-            padding: 30px;
-            margin-bottom: 24px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.02);
-        }
-
+        .card { background: var(--toss-card); border-radius: 24px; padding: 30px; margin-bottom: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.02); }
         .card-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
 
-        .hero {
-            grid-column: 1 / -1;
-            padding: 50px 40px;
-            background: var(--toss-card);
-        }
+        .hero { grid-column: 1 / -1; padding: 50px 40px; background: var(--toss-card); }
         .hero h1 { font-size: 32px; font-weight: 800; line-height: 1.3; }
-        .hero p { color: var(--toss-sub-text); margin-top: 15px; font-size: 18px; }
+        .hero p  { color: var(--toss-sub-text); margin-top: 15px; font-size: 18px; }
 
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        @media (max-width: 600px) {
-            .feature-grid { grid-template-columns: repeat(3, 1fr); }
-        }
+        /* ── 기능 그리드 ─────────────────────────────── */
+        .feature-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
+        @media (max-width: 600px) { .feature-grid { grid-template-columns: repeat(3,1fr); } }
+
         .feature-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 16px 8px;
-            background: var(--toss-card);
-            border-radius: 20px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 16px 8px; min-height: 88px;
+            background: var(--toss-card); border-radius: 20px;
             cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.28s cubic-bezier(0.4,0,0.2,1);
+            border: 1.5px solid transparent;
+            position: relative; overflow: hidden;
         }
-        .feature-item:hover { background: #f9fafb; transform: translateY(-2px); }
-        .feature-item i { color: var(--toss-blue); margin-bottom: 8px; width: 24px; height: 24px; }
-        .feature-item span { font-size: 13px; font-weight: 600; color: var(--toss-text); }
+        .feature-item:hover  { background: #f9fafb; transform: translateY(-2px); }
+        .feature-item:active { transform: scale(0.93) !important; background: #eef4ff !important; }
 
-        .schedule-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--toss-grey-bg);
+        .feature-item i    { color: var(--toss-blue); margin-bottom: 8px; width: 24px; height: 24px; transition: all 0.28s; }
+        .feature-item span { font-size: 13px; font-weight: 600; color: var(--toss-text); transition: all 0.28s; white-space: nowrap; }
+
+        .warn-badge {
+            display: none;
+            width: 18px; height: 18px;
+            background: var(--warn-orange); border-radius: 50%;
+            color: white; font-size: 12px; font-weight: 900;
+            align-items: center; justify-content: center;
+            flex-shrink: 0; line-height: 1;
         }
+
+        /* 접힌 상태 */
+        .feature-item.collapsed {
+            flex-direction: row; min-height: 44px;
+            padding: 10px 12px; gap: 6px; justify-content: center;
+            background: #fff8f0; border-color: #ffd7a8;
+        }
+        .feature-item.collapsed:hover  { transform: none; background: #fff0dc; }
+        .feature-item.collapsed:active { transform: scale(0.95) !important; background: #ffe8c0 !important; }
+        .feature-item.collapsed i      { margin-bottom: 0; width: 15px; height: 15px; color: var(--warn-orange); }
+        .feature-item.collapsed span   { font-size: 11px; color: var(--toss-sub-text); }
+        .feature-item.collapsed .warn-badge { display: flex; animation: shakeLR 0.5s ease-in-out; }
+
+        /* ── 좌우 흔들림 (회전 없음) ─────────────────── */
+        @keyframes shakeLR {
+            0%,100% { transform: translateX(0); }
+            20%     { transform: translateX(-7px); }
+            40%     { transform: translateX(7px); }
+            60%     { transform: translateX(-5px); }
+            80%     { transform: translateX(5px); }
+        }
+
+        /* ── 공통 ────────────────────────────────────── */
+        .schedule-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--toss-grey-bg); }
         .schedule-item:last-child { border: none; }
         .time { font-weight: 600; color: var(--toss-blue); width: 80px; }
 
-        .dept-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-        .dept-item {
-            padding: 20px;
-            background: var(--toss-grey-bg);
-            border-radius: 16px;
-            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
-        }
+        .dept-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 16px; }
+        .dept-item { padding: 20px; background: var(--toss-grey-bg); border-radius: 16px; transition: transform 0.3s cubic-bezier(0.2,0,0,1); }
         .dept-item:hover { transform: translateY(-5px); }
         .dept-icon { font-size: 24px; margin-bottom: 8px; display: block; }
 
         .apply-btn {
-            display: block;
-            width: 100%;
-            padding: 18px;
-            background: var(--toss-blue);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
+            display: block; width: 100%; padding: 18px;
+            background: var(--toss-blue); color: white;
+            border: none; border-radius: 16px; font-size: 17px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s cubic-bezier(0.175,0.885,0.32,1.275);
+            position: relative; overflow: hidden;
         }
-        .apply-btn:hover { background: var(--toss-blue-hover); transform: scale(1.02); }
-        .apply-btn:active { transform: scale(0.96); }
+        .apply-btn:hover   { background: var(--toss-blue-hover); transform: scale(1.02); }
+        .apply-btn:active  { transform: scale(0.96); }
+        .apply-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-        .ripple {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.1);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            border-radius: 50%;
-            animation: ripple-effect 0.6s ease-out;
-        }
-        @keyframes ripple-effect {
-            from { width: 0; height: 0; opacity: 0.5; }
-            to { width: 500px; height: 500px; opacity: 0; }
-        }
+        .ripple { position: absolute; background: rgba(0,0,0,0.1); transform: translate(-50%,-50%); pointer-events: none; border-radius: 50%; animation: ripple-effect 0.6s ease-out; }
+        @keyframes ripple-effect { from { width:0; height:0; opacity:0.5; } to { width:500px; height:500px; opacity:0; } }
 
-        .floating-action {
-            position: fixed;
-            bottom: 24px; left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 40px);
-            max-width: 400px;
-            z-index: 90;
-        }
+        .floating-action { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 400px; z-index: 90; }
 
+        /* ── 전체화면 모달 ───────────────────────────── */
         .full-modal {
-            position: fixed; inset: 0;
-            background-color: #fff;
-            z-index: 200;
-            display: none;
-            flex-direction: column;
-            padding: 60px 24px 40px;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: translateX(100%);
-            overflow-y: auto;
+            position: fixed; inset: 0; background-color: #fff; z-index: 200;
+            display: none; flex-direction: column; padding: 60px 24px 40px;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+            transform: translateX(100%); overflow-y: auto;
         }
-        .full-modal.active {
-            display: flex;
-            transform: translateX(0);
-        }
+        .full-modal.active { display: flex; transform: translateX(0); }
 
-        .error-modal {
+        /* ── 중앙 소형 모달 (준비중/에러 공용) ──────── */
+        .center-modal {
             position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            background: #fff;
-            z-index: 400;
-            width: calc(100% - 48px);
-            max-width: 340px;
-            border-radius: 24px;
-            padding: 30px;
-            display: none;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            text-align: center;
-            opacity: 0;
-            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translate(-50%,-50%) scale(0.88);
+            background: #fff; z-index: 400;
+            width: calc(100% - 48px); max-width: 340px;
+            border-radius: 24px; padding: 32px 28px 26px;
+            display: none; box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+            text-align: center; opacity: 0;
+            transition: 0.28s cubic-bezier(0.16,1,0.3,1);
         }
-        .error-modal.active { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .error-dim { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 399; display: none; }
+        .center-modal.active { display: block; opacity: 1; transform: translate(-50%,-50%) scale(1); }
+        .modal-dim { position: fixed; inset: 0; background: rgba(0,0,0,0.38); z-index: 399; display: none; }
 
         .modal-content { max-width: 500px; margin: 0 auto; width: 100%; }
-        .close-x { position: absolute; top: 20px; right: 24px; font-size: 28px; cursor: pointer; border:none; background:none;}
+        .close-x { position: absolute; top: 20px; right: 24px; font-size: 28px; cursor: pointer; border: none; background: none; z-index: 1; }
 
         input, textarea {
-            width: 100%;
-            padding: 16px;
-            border-radius: 14px;
-            border: 1px solid var(--toss-border);
-            background: var(--toss-grey-bg);
-            font-size: 16px;
-            margin-bottom: 12px;
-            transition: 0.2s;
+            width: 100%; padding: 16px; border-radius: 14px;
+            border: 1px solid var(--toss-border); background: var(--toss-grey-bg);
+            font-size: 16px; margin-bottom: 12px; transition: 0.2s; font-family: inherit;
         }
-        input:focus { outline: none; border-color: var(--toss-blue); background: #fff; }
+        input:focus, textarea:focus { outline: none; border-color: var(--toss-blue); background: #fff; }
 
+        /* ── 성공/경고 오버레이 ──────────────────────── */
         #successOverlay {
-            display: none; position: fixed; inset: 0;
-            background: white; z-index: 300;
+            display: none; position: fixed; inset: 0; background: white; z-index: 300;
             flex-direction: column; justify-content: center; align-items: center;
         }
         .check-circle {
-            width: 80px; height: 80px;
-            background: var(--toss-blue);
-            border-radius: 50%;
+            width: 80px; height: 80px; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            transform: scale(0);
-            animation: bounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.5) forwards;
+            animation: bounce 0.5s cubic-bezier(0.175,0.885,0.32,1.5) forwards;
         }
-        .check-path {
-            stroke: white; stroke-width: 5; fill: none;
-            stroke-dasharray: 50; stroke-dashoffset: 50;
-            animation: draw 0.4s 0.4s ease-out forwards;
-        }
-        @keyframes bounce { to { transform: scale(1); } }
-        @keyframes draw { to { stroke-dashoffset: 0; } }
+        #overlayIconCircle svg { width: 42px !important; height: 42px !important; }
+        #wipIconWrap       svg { width: 54px !important; height: 54px !important; }
 
+        @keyframes bounce { from { transform: scale(0); } to { transform: scale(1); } }
+
+        /* ── 대시보드 ─────────────────────────────────── */
         .dash-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         .dash-table th, .dash-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--toss-border); }
         .dash-table th { font-size: 14px; color: var(--toss-sub-text); background: #f9fafb; }
         .dash-table tr:hover { background-color: #fafafa; }
-        
         .filter-tabs { display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
         .tab { padding: 10px 20px; background: #e5e8eb; border-radius: 12px; cursor: pointer; font-size: 14px; border: none; font-weight: 600; color: #4e5968; transition: 0.2s; white-space: nowrap; }
         .tab.active { background: var(--toss-blue); color: white; }
-
-        .delete-btn {
-            background: #ffe0e3;
-            color: var(--toss-red);
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.2s;
-            position: relative; overflow: hidden;
-        }
+        .delete-btn { background: #ffe0e3; color: var(--toss-red); border: none; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; transition: 0.2s; position: relative; overflow: hidden; }
         .delete-btn:hover { background: var(--toss-red); color: white; }
 
         .user-info { display: flex; align-items: center; gap: 12px; }
         .nickname { font-weight: 700; color: var(--toss-text); font-size: 15px; }
 
-        .google-login-container {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            border-top: 1px solid var(--toss-border);
-            padding-top: 24px;
-        }
+        /* ── 구글 로그인 ─────────────────────────────── */
+        .google-divider { display: flex; align-items: center; margin: 24px 0 20px; gap: 12px; }
+        .google-divider::before, .google-divider::after { content: ''; flex: 1; height: 1px; background: var(--toss-border); }
+        .google-divider span { font-size: 13px; color: var(--toss-sub-text); white-space: nowrap; }
+
+        .google-sign-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; border: 1.5px solid var(--toss-border); border-radius: 14px; background: white; font-size: 15px; font-weight: 600; color: var(--toss-text); cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+        .google-sign-btn:hover { background: #f8faff; border-color: #b8cdf8; }
+        .google-sign-btn:active { transform: scale(0.97); }
+
+        .google-email-step { background: #fff; border: 1.5px solid var(--toss-border); border-radius: 20px; padding: 28px 24px 20px; text-align: center; }
+        .google-g-logo { width: 40px; height: 40px; border-radius: 50%; background: white; border: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+        .google-email-step h3 { font-size: 20px; font-weight: 500; color: #202124; margin-bottom: 6px; }
+        .google-email-step p  { font-size: 14px; color: #5f6368; margin-bottom: 20px; }
+        .google-email-input { width: 100% !important; border: 1px solid #dadce0 !important; border-radius: 6px !important; padding: 13px 15px !important; font-size: 16px !important; background: #fff !important; margin-bottom: 6px !important; transition: 0.2s !important; font-family: inherit; }
+        .google-email-input:focus { outline: none !important; border-color: #1a73e8 !important; box-shadow: 0 0 0 2px rgba(26,115,232,0.2) !important; background: #fff !important; }
+        .google-hint { font-size: 12px; color: #5f6368; text-align: left; margin-bottom: 20px; padding-left: 2px; }
+        .google-actions { display: flex; justify-content: space-between; align-items: center; }
+        .google-cancel-btn { background: none; border: none; color: #1a73e8; font-size: 14px; font-weight: 600; cursor: pointer; padding: 10px 16px; border-radius: 6px; transition: background 0.2s; }
+        .google-cancel-btn:hover { background: rgba(26,115,232,0.06); }
+        .google-next-btn { background: #1a73e8; color: white; border: none; padding: 10px 26px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .google-next-btn:hover { background: #1558b0; }
     </style>
 </head>
 <body>
@@ -312,7 +242,7 @@
     <div class="nav-content">
         <div class="logo" onclick="location.href='/'">JBS</div>
         <div class="user-info" id="navAuthArea">
-            <div style="font-weight: 600; font-size: 15px;" class="pc-only">중동중학교 방송부</div>
+            <div style="font-weight:600; font-size:15px;">중동중학교 방송부</div>
             <button class="admin-login-btn" onclick="openModal('adminModal')">로그인</button>
         </div>
     </div>
@@ -326,18 +256,20 @@
 
     <div class="content-area">
         <div class="feature-grid">
-            <button class="feature-item" onclick="openModal('applyModal')"><i data-lucide="music"></i><span>음악 신청</span></button>
-            <button class="feature-item" onclick="mockAction('공지사항')"><i data-lucide="megaphone"></i><span>공지사항</span></button>
-            <button class="feature-item" onclick="mockAction('실시간 방송')"><i data-lucide="radio"></i><span>실시간 방송</span></button>
-            <button class="feature-item" onclick="mockAction('커뮤니티')"><i data-lucide="users"></i><span>커뮤니티</span></button>
-            <button class="feature-item" onclick="mockAction('갤러리')"><i data-lucide="image"></i><span>갤러리</span></button>
-            <button class="feature-item" onclick="mockAction('일정')"><i data-lucide="calendar"></i><span>일정</span></button>
-            <button class="feature-item" onclick="mockAction('랭킹')"><i data-lucide="trophy"></i><span>랭킹</span></button>
-            <button class="feature-item" onclick="mockAction('지난 방송')"><i data-lucide="history"></i><span>지난 방송</span></button>
-            <button class="feature-item" onclick="mockAction('건의함')"><i data-lucide="message-square"></i><span>건의함</span></button>
-            <button class="feature-item" onclick="mockAction('FAQ')"><i data-lucide="help-circle"></i><span>FAQ</span></button>
-            <button class="feature-item" onclick="mockAction('자료실')"><i data-lucide="folder-open"></i><span>자료실</span></button>
-            <button class="feature-item" onclick="mockAction('사용자')"><i data-lucide="user"></i><span>사용자</span></button>
+            <button class="feature-item" onclick="openModal('applyModal')">
+                <i data-lucide="music"></i><span>음악 신청</span><span class="warn-badge">!</span>
+            </button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="megaphone"></i><span>공지사항</span><span class="warn-badge">!</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="radio"></i><span>실시간 방송</span><span class="warn-badge">!</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="users"></i><span>커뮤니티</span><span class="warn-badge">!</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="image"></i><span>갤러리</span><span class="warn-badge">!</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="calendar"></i><span>일정</span><span class="warn-badge">!</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="trophy"></i><span>랭킹</span><span class="warn-badge">!</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="history"></i><span>지난 방송</span><span class="warn-badge">!</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="message-square"></i><span>건의함</span><span class="warn-badge">!</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="help-circle"></i><span>FAQ</span><span class="warn-badge">!</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="folder-open"></i><span>자료실</span><span class="warn-badge">!</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="user"></i><span>사용자</span><span class="warn-badge">!</span></button>
         </div>
 
         <div class="card">
@@ -350,370 +282,460 @@
         <div class="card">
             <div class="card-title">부서 안내</div>
             <div class="dept-grid">
-                <div class="dept-item"><span class="dept-icon">🎤</span><strong>아나운서</strong><p style="font-size: 13px; color: var(--toss-sub-text); margin-top: 5px;">방송 진행 및 대본 작성</p></div>
-                <div class="dept-item"><span class="dept-icon">🎧</span><strong>엔지니어</strong><p style="font-size: 13px; color: var(--toss-sub-text); margin-top: 5px;">음향 믹싱 및 장비 운용</p></div>
-                <div class="dept-item"><span class="dept-icon">🎬</span><strong>영상제작</strong><p style="font-size: 13px; color: var(--toss-sub-text); margin-top: 5px;">학교 행사 및 영상 편집</p></div>
+                <div class="dept-item"><span class="dept-icon">🎤</span><strong>아나운서</strong><p style="font-size:13px; color:var(--toss-sub-text); margin-top:5px;">방송 진행 및 대본 작성</p></div>
+                <div class="dept-item"><span class="dept-icon">🎧</span><strong>엔지니어</strong><p style="font-size:13px; color:var(--toss-sub-text); margin-top:5px;">음향 믹싱 및 장비 운용</p></div>
+                <div class="dept-item"><span class="dept-icon">🎬</span><strong>영상제작</strong><p style="font-size:13px; color:var(--toss-sub-text); margin-top:5px;">학교 행사 및 영상 편집</p></div>
             </div>
         </div>
     </div>
 
     <div class="sidebar">
-        <div class="card" style="position: sticky; top: 100px;">
+        <div class="card" style="position:sticky; top:100px;">
             <div class="card-title">음악 신청</div>
-            <p style="font-size: 14px; color: var(--toss-sub-text); margin-bottom: 20px;">지금 바로 신청곡을 보내보세요.<br>선정된 곡은 점심시간에 방송됩니다.</p>
+            <p style="font-size:14px; color:var(--toss-sub-text); margin-bottom:20px;">지금 바로 신청곡을 보내보세요.<br>선정된 곡은 점심시간에 방송됩니다.</p>
             <button class="apply-btn" onclick="openModal('applyModal')">곡 신청하기</button>
         </div>
     </div>
 </div>
 
-<div class="main-wrapper" id="adminDashboard" style="display: none; grid-template-columns: 1fr;">
+<!-- 관리자 대시보드 -->
+<div class="main-wrapper" id="adminDashboard" style="display:none; grid-template-columns:1fr;">
     <div class="card">
         <div class="card-title">JBS 신청곡 대시보드</div>
         <div class="filter-tabs">
-            <button class="tab active" onclick="filterData('all', this)">전체</button>
-            <button class="tab" onclick="filterData('week', this)">이번 주</button>
-            <button class="tab" onclick="filterData('today', this)">오늘</button>
+            <button class="tab active" onclick="filterData('all',this)">전체</button>
+            <button class="tab" onclick="filterData('week',this)">이번 주</button>
+            <button class="tab" onclick="filterData('today',this)">오늘</button>
         </div>
-        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+        <div style="overflow-x:auto;">
             <table class="dash-table">
-                <thead><tr><th>시간</th><th>제목</th><th>가수</th><th>사연</th><th>동작</th></tr></thead>
+                <thead><tr><th>시간</th><th>제목</th><th>가수</th><th>사연</th><th>신청자</th><th>동작</th></tr></thead>
                 <tbody id="adminDataTable"></tbody>
             </table>
         </div>
-        <button class="admin-login-btn" onclick="handleLogout()" style="margin-top:20px; color: var(--toss-red)">로그아웃</button>
+        <button class="admin-login-btn" onclick="handleLogout()" style="margin-top:20px; color:var(--toss-red)">로그아웃</button>
     </div>
 </div>
 
-<div class="floating-action" id="mobileAction"><button class="apply-btn" onclick="openModal('applyModal')">노래 신청하기</button></div>
+<div class="floating-action" id="mobileAction">
+    <button class="apply-btn" onclick="openModal('applyModal')">노래 신청하기</button>
+</div>
 
+<!-- ── 음악 신청 모달 ── -->
 <div id="applyModal" class="full-modal">
     <button class="close-x" onclick="closeModal('applyModal')">✕</button>
     <div class="modal-content">
-        <h2 style="font-size: 26px; margin-bottom: 8px;">듣고 싶은 노래를<br>알려주세요</h2>
-        <p style="color: var(--toss-sub-text); margin-bottom: 32px;">신청하신 곡은 사연과 함께 방송됩니다.</p>
-        <label style="font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px;">곡 제목</label>
-        <input type="text" id="songTitle" placeholder="제목을 입력해주세요">
-        <label style="font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px;">가수</label>
-        <input type="text" id="artist" placeholder="가수를 입력해주세요">
-        <label style="font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px;">사연 (선택)</label>
+        <h2 style="font-size:26px; margin-bottom:8px;">듣고 싶은 노래를<br>알려주세요</h2>
+        <p style="color:var(--toss-sub-text); margin-bottom:32px;">신청하신 곡은 사연과 함께 방송됩니다.</p>
+        <label style="font-size:13px; color:var(--toss-blue); font-weight:600; margin-left:4px;">곡 제목</label>
+        <input type="text" id="songTitle" placeholder="제목을 입력해주세요" autocomplete="off">
+        <label style="font-size:13px; color:var(--toss-blue); font-weight:600; margin-left:4px;">가수</label>
+        <input type="text" id="artist" placeholder="가수를 입력해주세요" autocomplete="off">
+        <label style="font-size:13px; color:var(--toss-blue); font-weight:600; margin-left:4px;">사연 (선택)</label>
         <textarea rows="4" id="story" placeholder="방송에 읽어드릴 사연을 적어주세요"></textarea>
-        <div style="margin-top: 20px;"><button class="apply-btn" id="submitMusicBtn" onclick="submitMusic()">신청 완료</button></div>
-    </div>
-</div>
-
-<div id="adminModal" class="full-modal">
-    <button class="close-x" onclick="closeModal('adminModal')">✕</button>
-    <div class="modal-content">
-        <h2 style="font-size: 26px; margin-bottom: 8px;">로그인</h2>
-        <p style="color: var(--toss-sub-text); margin-bottom: 32px;">계정 정보를 입력하여 로그인하세요.</p>
-        <label style="font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px;">아이디</label>
-        <input type="text" id="adminId" placeholder="아이디를 입력해주세요">
-        <label style="font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px;">비밀번호</label>
-        <input type="password" id="adminPw" placeholder="비밀번호를 입력해주세요">
-        <div style="margin-top: 20px;"><button class="apply-btn" onclick="handleAdminLogin()">로그인</button></div>
-        
-        <div class="google-login-container">
-            <div id="g_id_onload"
-                 data-client_id="YOUR_GOOGLE_CLIENT_ID"
-                 data-context="signin"
-                 data-ux_mode="redirect"
-                 data-login_uri="https://jaewondev27.github.io/jbsv2siteunoff/appv2"
-                 data-auto_prompt="false"
-                 data-callback="handleCredentialResponse">
-            </div>
-            <div class="g_id_signin" data-type="standard"></div>
+        <div style="margin-top:20px;">
+            <button class="apply-btn" id="submitMusicBtn" onclick="submitMusic()">신청 완료</button>
         </div>
     </div>
 </div>
 
-<div id="errorDim" class="error-dim" onclick="closeErrorModal()"></div>
-<div id="errorModal" class="error-modal">
-    <h3 id="errorTitle" style="font-size: 20px; margin-bottom: 12px; font-weight: 800;">안내</h3>
-    <p id="errorMsg" style="color: var(--toss-sub-text); margin-bottom: 24px; font-size: 15px;"></p>
-    <button class="apply-btn" onclick="closeErrorModal()" style="padding: 14px;">확인</button>
+<!-- ── 로그인 모달 ── -->
+<div id="adminModal" class="full-modal">
+    <button class="close-x" onclick="closeModal('adminModal')">✕</button>
+    <div class="modal-content">
+        <h2 style="font-size:26px; margin-bottom:8px;">로그인</h2>
+        <p style="color:var(--toss-sub-text); margin-bottom:32px;">계정 정보를 입력하여 로그인하세요.</p>
+        <label style="font-size:13px; color:var(--toss-blue); font-weight:600; margin-left:4px;">아이디</label>
+        <input type="text" id="adminId" placeholder="아이디를 입력해주세요" autocomplete="off">
+        <label style="font-size:13px; color:var(--toss-blue); font-weight:600; margin-left:4px;">비밀번호</label>
+        <input type="password" id="adminPw" placeholder="비밀번호를 입력해주세요" onkeydown="if(event.key==='Enter') handleAdminLogin()">
+        <div style="margin-top:20px;"><button class="apply-btn" onclick="handleAdminLogin()">로그인</button></div>
+        <div class="google-divider"><span>또는</span></div>
+        <div id="gStep1">
+            <button class="google-sign-btn" onclick="showGoogleStep()">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Google로 로그인
+            </button>
+        </div>
+        <div id="gStep2" style="display:none;">
+            <div class="google-email-step">
+                <div class="google-g-logo">
+                    <svg width="22" height="22" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                </div>
+                <h3>로그인</h3>
+                <p>JBS 방송국으로 이동</p>
+                <input type="email" class="google-email-input" id="googleEmailInput"
+                       placeholder="학교 이메일 입력"
+                       onkeydown="if(event.key==='Enter') handleGoogleEmailLogin()">
+                <p class="google-hint">중동중학교 계정(@joongdong.ms.kr)을 사용해주세요</p>
+                <div class="google-actions">
+                    <button class="google-cancel-btn" onclick="hideGoogleStep()">취소</button>
+                    <button class="google-next-btn"   onclick="handleGoogleEmailLogin()">로그인</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- ── 준비 중 모달 ── -->
+<div id="wipDim"   class="modal-dim"    onclick="closeWipModal()"></div>
+<div id="wipModal" class="center-modal">
+    <div id="wipIconWrap" style="display:flex; justify-content:center; margin-bottom:18px; color:var(--warn-orange);"></div>
+    <h3 style="font-size:20px; margin-bottom:10px; font-weight:800;">준비 중이에요</h3>
+    <p  style="color:var(--toss-sub-text); margin-bottom:24px; font-size:15px; line-height:1.65;">아직 준비 중인 기능이에요.<br>조금만 기다려 주세요!</p>
+    <button class="apply-btn" onclick="closeWipModal()" style="padding:14px;">확인</button>
+</div>
+
+<!-- ── 에러 모달 ── -->
+<div id="errorDim"   class="modal-dim"    onclick="closeErrorModal()"></div>
+<div id="errorModal" class="center-modal">
+    <h3 id="errorTitle" style="font-size:20px; margin-bottom:12px; font-weight:800;">안내</h3>
+    <p  id="errorMsg"   style="color:var(--toss-sub-text); margin-bottom:24px; font-size:15px;"></p>
+    <button class="apply-btn" onclick="closeErrorModal()" style="padding:14px;">확인</button>
+</div>
+
+<!-- ── 성공/경고 오버레이 ── -->
 <div id="successOverlay">
-    <div class="check-circle" id="overlayIconCircle">
-        <svg id="successSvg" width="40" height="40" viewBox="0 0 52 52" style="display:none;"><path class="check-path" d="M14 27l7 7 17-17"/></svg>
-        <svg id="failSvg" width="40" height="40" viewBox="0 0 52 52" style="display:none;"><path class="check-path" d="M16 16l20 20M36 16L16 36"/></svg>
-    </div>
-    <h2 id="successText" style="margin-top: 24px; font-weight: 700; text-align: center; padding: 0 20px;">신청이 완료됐어요</h2>
+    <div class="check-circle" id="overlayIconCircle"></div>
+    <h2 id="successText" style="margin-top:24px; font-weight:700; text-align:center; padding:0 20px;"></h2>
 </div>
 
 <script>
-    const BASE_URL = 'https://jbsserver.pythonanywhere.com'; 
-    const API_KEY = "JBS_INTERNAL_SECURE_KEY_2024";
+    const BASE_URL = 'https://jbsserver.pythonanywhere.com';
+    const API_KEY  = 'JBS_INTERNAL_SECURE_KEY_2024';
     let allData = [];
 
     lucide.createIcons();
 
     const filter = new Filter();
-    const koBadWords = ['시발', '지랄', '개새끼', '병신', '미친', '노무', '일베'];
-    filter.addWords(...koBadWords);
+    filter.addWords('시발','지랄','개새끼','병신','미친','노무','일베');
 
-    function parseJwt (token) {
-        var base64Url = token.split('.')[1];
-        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-    };
-
-    function handleCredentialResponse(response) {
-        const responsePayload = parseJwt(response.credential);
-        const email = responsePayload.email;
-
-        if (email.endsWith("@joongdong.ms.kr")) {
-            localStorage.setItem('userNickname', responsePayload.name || email.split('@')[0]);
-            showToast("학교 계정으로 로그인되었습니다.");
-            closeModal('adminModal');
-            updateAuthUI();
-        } else {
-            showErrorModal("중동중학교 계정(@joongdong.ms.kr)만 이용 가능합니다.");
-        }
-    }
-
-    document.addEventListener('click', function(e) {
-        const btn = e.target.closest('.apply-btn, .admin-login-btn, .delete-btn, .tab, .feature-item');
-        if (btn) {
-            const ripple = document.createElement('span');
-            ripple.classList.add('ripple');
-            const rect = btn.getBoundingClientRect();
-            ripple.style.left = `${e.clientX - rect.left}px`;
-            ripple.style.top = `${e.clientY - rect.top}px`;
-            btn.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 600);
-        }
-    });
-
-    function openModal(id) {
-        const target = document.getElementById(id);
-        target.style.display = 'flex';
-        setTimeout(() => target.classList.add('active'), 10);
-        document.body.style.overflow = 'hidden';
-        window.history.pushState({ modal: id }, '', '#' + id);
-    }
-
-    function closeModal(id) {
-        const target = document.getElementById(id);
-        if (!target) return;
-        target.classList.remove('active');
-        setTimeout(() => { target.style.display = 'none'; }, 400);
-        document.body.style.overflow = 'auto';
-        if(window.location.hash === '#' + id) window.history.back();
-    }
-
-    function mockAction(name) {
-        showToast(`'${name}' 기능은 준비 중입니다.`);
-    }
-
-    function showErrorModal(msg) {
-        document.getElementById('errorMsg').innerText = msg;
-        document.getElementById('errorDim').style.display = 'block';
-        document.getElementById('errorModal').style.display = 'block';
-        setTimeout(() => document.getElementById('errorModal').classList.add('active'), 10);
-    }
-
-    function closeErrorModal() {
-        document.getElementById('errorModal').classList.remove('active');
-        setTimeout(() => {
-            document.getElementById('errorModal').style.display = 'none';
-            document.getElementById('errorDim').style.display = 'none';
-        }, 300);
-    }
-
-    window.onpopstate = function(event) {
-        const activeModals = document.querySelectorAll('.full-modal.active');
-        activeModals.forEach(m => {
-            m.classList.remove('active');
-            setTimeout(() => { m.style.display = 'none'; }, 400);
-        });
-        document.body.style.overflow = 'auto';
-    };
-
-    function showToast(text, isError = false) {
-        const overlay = document.getElementById('successOverlay');
-        const sText = document.getElementById('successText');
-        const circle = document.getElementById('overlayIconCircle');
-        const successSvg = document.getElementById('successSvg');
-        const failSvg = document.getElementById('failSvg');
-        
-        sText.innerText = text;
-        circle.style.backgroundColor = isError ? 'var(--toss-red)' : 'var(--toss-blue)';
-        successSvg.style.display = isError ? 'none' : 'block';
-        failSvg.style.display = isError ? 'block' : 'none';
-        
-        overlay.style.display = 'flex';
-        setTimeout(() => { overlay.style.display = 'none'; }, 2000);
-    }
-
-    // 신청 완료 버튼 로직 수정 (반응 없는 문제 해결)
-    async function submitMusic() {
-        const title = document.getElementById('songTitle').value.trim();
-        const artist = document.getElementById('artist').value.trim();
-        const story = document.getElementById('story').value.trim();
-
-        if(!title || !artist) { 
-            showToast('곡 제목과 가수를 입력해주세요!', true); 
-            return; 
-        }
-
-        if(filter.isProfane(title) || filter.isProfane(artist) || filter.isProfane(story)) {
-            showToast('욕설이 포함되었습니다.', true); 
-            return;
-        }
-
-        const submitBtn = document.getElementById('submitMusicBtn');
-        submitBtn.disabled = true; // 중복 클릭 방지
-
-        try {
-            const response = await fetch(`${BASE_URL}/api/request`, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json', 
-                    'X-JBS-KEY': API_KEY 
-                },
-                body: JSON.stringify({ 
-                    title: title, 
-                    artist: artist, 
-                    story: story 
-                })
-            });
-
-            const result = await response.json();
-
-            if(response.ok && result.status === 'success') {
-                showToast("신청이 완료됐어요");
-                closeModal('applyModal');
-                document.getElementById('songTitle').value = '';
-                document.getElementById('artist').value = '';
-                document.getElementById('story').value = '';
-            } else {
-                showToast(result.message || '신청 처리 중 오류가 발생했습니다.', true);
+    /* ════════════════════════════════════════════════
+       Lucide 아이콘 동적 주입 헬퍼
+       - container에 <i data-lucide="..."> 삽입 후 createIcons 호출
+       - shakeOnInsert: true면 좌우 흔들림 적용
+    ════════════════════════════════════════════════ */
+    function injectIcon(container, name, { color = 'currentColor', sw = '2', shake = false } = {}) {
+        container.innerHTML = `<i data-lucide="${name}" style="color:${color}; stroke-width:${sw};"></i>`;
+        lucide.createIcons();
+        if (shake) {
+            const svg = container.querySelector('svg');
+            if (svg) {
+                svg.style.animation = 'none';
+                svg.offsetHeight; // reflow
+                svg.style.animation = 'shakeLR 0.48s ease-in-out 3';
             }
-        } catch (e) { 
-            console.error(e);
-            showToast('서버 통신 오류가 발생했습니다.', true); 
-        } finally {
-            submitBtn.disabled = false;
         }
     }
 
-    async function handleAdminLogin() {
-        const id = document.getElementById('adminId').value;
-        const pw = document.getElementById('adminPw').value;
-        if(!id || !pw) { showErrorModal('정보를 모두 입력해주세요.'); return; }
+    /* ════════════════════════════════════════════════
+       토스트 오버레이
+       타입: 'success' | 'error' | 'warning'  (또는 bool 하위호환)
+    ════════════════════════════════════════════════ */
+    function showToast(text, typeArg = 'success') {
+        const type = (typeof typeArg === 'boolean') ? (typeArg ? 'error' : 'success') : typeArg;
+
+        const overlay = document.getElementById('successOverlay');
+        const sText   = document.getElementById('successText');
+        const circle  = document.getElementById('overlayIconCircle');
+
+        sText.innerText = text;
+
+        // 바운스 리셋
+        circle.style.animation = 'none';
+        circle.offsetHeight;
+        circle.style.animation = 'bounce 0.5s cubic-bezier(0.175,0.885,0.32,1.5) forwards';
+
+        const map = {
+            success: { icon: 'check',          bg: 'var(--toss-blue)',   sw: '3',   shake: false },
+            error:   { icon: 'x',              bg: 'var(--toss-red)',    sw: '3',   shake: false },
+            warning: { icon: 'triangle-alert', bg: 'var(--warn-orange)', sw: '2.5', shake: true  }
+        };
+        const cfg = map[type] || map.success;
+
+        circle.style.background = cfg.bg;
+        injectIcon(circle, cfg.icon, { color: 'white', sw: cfg.sw, shake: cfg.shake });
+
+        overlay.style.display = 'flex';
+        setTimeout(() => { overlay.style.display = 'none'; }, 2200);
+    }
+
+    /* ════════════════════════════════════════════════
+       준비 중 모달
+    ════════════════════════════════════════════════ */
+    function openWipModal() {
+        injectIcon(
+            document.getElementById('wipIconWrap'),
+            'alert-circle',
+            { color: 'var(--warn-orange)', sw: '1.8', shake: true }
+        );
+        document.getElementById('wipDim').style.display = 'block';
+        const m = document.getElementById('wipModal');
+        m.style.display = 'block';
+        setTimeout(() => m.classList.add('active'), 10);
+    }
+    function closeWipModal() {
+        const m = document.getElementById('wipModal');
+        m.classList.remove('active');
+        setTimeout(() => {
+            m.style.display = 'none';
+            document.getElementById('wipDim').style.display = 'none';
+        }, 280);
+    }
+
+    /* 준비 중 버튼 클릭 처리 */
+    function handleMockBtn(btn) {
+        // 모달 표시
+        openWipModal();
+        // 버튼 접기 (처음 클릭 시)
+        if (!btn.classList.contains('collapsed')) {
+            btn.classList.add('collapsed');
+            lucide.createIcons();
+            // warn-badge 흔들림 재실행
+            const badge = btn.querySelector('.warn-badge');
+            if (badge) { badge.style.animation = 'none'; badge.offsetHeight; badge.style.animation = ''; }
+        }
+    }
+
+    /* ════════════════════════════════════════════════
+       구글 로그인 (이메일 검증 방식)
+    ════════════════════════════════════════════════ */
+    function showGoogleStep() {
+        document.getElementById('gStep1').style.display = 'none';
+        document.getElementById('gStep2').style.display = 'block';
+        setTimeout(() => document.getElementById('googleEmailInput').focus(), 150);
+    }
+    function hideGoogleStep() {
+        document.getElementById('gStep2').style.display = 'none';
+        document.getElementById('gStep1').style.display = 'block';
+        document.getElementById('googleEmailInput').value = '';
+    }
+    function handleGoogleEmailLogin() {
+        const email = document.getElementById('googleEmailInput').value.trim().toLowerCase();
+        if (!email) { showToast('이메일을 입력해주세요.', 'warning'); return; }
+        if (!email.endsWith('@joongdong.ms.kr')) { showErrorModal('중동중학교 계정(@joongdong.ms.kr)만 이용 가능합니다.'); return; }
+        const name = email.split('@')[0];
+        localStorage.setItem('userNickname', name);
+        localStorage.setItem('userEmail',    email);
+        localStorage.setItem('loginMethod',  'google');
+        showToast('Google 계정으로 로그인됐어요!', 'success');
+        closeModal('adminModal');
+        hideGoogleStep();
+        updateAuthUI();
+    }
+
+    /* ════════════════════════════════════════════════
+       음악 신청
+    ════════════════════════════════════════════════ */
+    async function submitMusic() {
+        const title    = document.getElementById('songTitle').value.trim();
+        const artist   = document.getElementById('artist').value.trim();
+        const story    = document.getElementById('story').value.trim();
+        const userName = localStorage.getItem('userNickname') || '익명';
+
+        if (!title || !artist) { showToast('곡 제목과 가수를 입력해주세요!', 'warning'); return; }
+        for (const t of [title, artist, story].filter(Boolean)) {
+            if (filter.isProfane(t)) { showToast('욕설이 포함되어 있습니다.', 'warning'); return; }
+        }
+
+        const btn = document.getElementById('submitMusicBtn');
+        btn.disabled  = true;
+        btn.innerText = '전송 중...';
+
+        const payload = { title, artist, story, userName };
+        let   success = false;
 
         try {
-            const response = await fetch(`${BASE_URL}/api/admin/login`, {
+            const ctrl = new AbortController();
+            const tid  = setTimeout(() => ctrl.abort(), 6000);
+            const res  = await fetch(`${BASE_URL}/api/request`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
-                body: JSON.stringify({ id, pw })
+                body:   JSON.stringify(payload),
+                signal: ctrl.signal
             });
-            const resData = await response.json();
-            if(response.ok && resData.admin_token) {
-                localStorage.setItem('adminToken', resData.admin_token);
+            clearTimeout(tid);
+            if (res.ok && (await res.json()).status === 'success') success = true;
+        } catch (_) { /* 오프라인 폴백 */ }
+
+        if (!success) saveToLocalQueue(payload);
+        showToast(success ? '신청이 완료됐어요! 🎵' : '신청이 접수됐어요! (오프라인 저장)', 'success');
+
+        document.getElementById('songTitle').value = '';
+        document.getElementById('artist').value    = '';
+        document.getElementById('story').value     = '';
+        closeModal('applyModal');
+        btn.disabled  = false;
+        btn.innerText = '신청 완료';
+    }
+
+    function saveToLocalQueue(data) {
+        try {
+            const q = JSON.parse(localStorage.getItem('musicQueue') || '[]');
+            q.push({ ...data, timestamp: new Date().toISOString(), _lid: Date.now() });
+            localStorage.setItem('musicQueue', JSON.stringify(q));
+        } catch (_) {}
+    }
+    async function syncLocalQueue() {
+        let q = []; try { q = JSON.parse(localStorage.getItem('musicQueue') || '[]'); } catch (_) { return; }
+        if (!q.length) return;
+        const synced = [];
+        for (const item of q) {
+            try {
+                const r = await fetch(`${BASE_URL}/api/request`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY }, body: JSON.stringify(item) });
+                if (r.ok) synced.push(item._lid);
+            } catch (_) { break; }
+        }
+        if (synced.length) localStorage.setItem('musicQueue', JSON.stringify(q.filter(i => !synced.includes(i._lid))));
+    }
+
+    /* ════════════════════════════════════════════════
+       관리자 로그인 / 로그아웃
+    ════════════════════════════════════════════════ */
+    async function handleAdminLogin() {
+        const id = document.getElementById('adminId').value.trim();
+        const pw = document.getElementById('adminPw').value;
+        if (!id || !pw) { showErrorModal('정보를 모두 입력해주세요.'); return; }
+        try {
+            const res  = await fetch(`${BASE_URL}/api/admin/login`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY }, body: JSON.stringify({ id, pw }) });
+            const data = await res.json();
+            if (res.ok && data.admin_token) {
+                localStorage.setItem('adminToken',   data.admin_token);
                 localStorage.setItem('userNickname', id);
-                showToast("로그인에 성공했어요");
+                localStorage.setItem('loginMethod',  'admin');
+                showToast('로그인에 성공했어요', 'success');
                 closeModal('adminModal');
                 updateAuthUI();
-                if(id === 'admin') showDashboard();
-            } else { showErrorModal("로그인 정보가 틀렸습니다."); }
-        } catch (e) { showErrorModal('서버 통신 오류가 발생했습니다.'); }
+                if (id === 'admin') showDashboard();
+            } else { showErrorModal('로그인 정보가 틀렸습니다.'); }
+        } catch (_) { showErrorModal('서버 통신 오류가 발생했습니다.'); }
     }
-
     function handleLogout() {
-        localStorage.removeItem('adminToken');
-        localStorage.removeItem('userNickname');
+        ['adminToken','userNickname','userEmail','loginMethod'].forEach(k => localStorage.removeItem(k));
         location.reload();
     }
-
     function updateAuthUI() {
-        const nick = localStorage.getItem('userNickname');
-        const authArea = document.getElementById('navAuthArea');
-        if(nick) {
-            authArea.innerHTML = `
-                <span class="nickname">${nick}님</span>
-                <button class="admin-login-btn" onclick="handleLogout()" style="color: var(--toss-red)">로그아웃</button>
-            `;
-        }
+        const nick   = localStorage.getItem('userNickname');
+        const method = localStorage.getItem('loginMethod');
+        if (!nick) return;
+        const gBadge = method === 'google'
+            ? `<svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:3px;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>` : '';
+        document.getElementById('navAuthArea').innerHTML = `
+            <span class="nickname">${gBadge}${nick}님</span>
+            <button class="admin-login-btn" onclick="handleLogout()" style="color:var(--toss-red)">로그아웃</button>`;
     }
 
+    /* ════════════════════════════════════════════════
+       대시보드
+    ════════════════════════════════════════════════ */
     async function showDashboard() {
         const token = localStorage.getItem('adminToken');
-        if(!token) return;
-
-        document.getElementById('mainPage').style.display = 'none';
+        if (!token) return;
+        document.getElementById('mainPage').style.display     = 'none';
         document.getElementById('mobileAction').style.display = 'none';
         document.getElementById('adminDashboard').style.display = 'grid';
-        
         try {
-            const response = await fetch(`${BASE_URL}/api/admin/data`, {
-                headers: { 'X-JBS-KEY': API_KEY, 'X-Admin-Token': token }
-            });
-            if(!response.ok) { handleLogout(); return; }
-            allData = await response.json();
+            const res = await fetch(`${BASE_URL}/api/admin/data`, { headers: { 'X-JBS-KEY': API_KEY, 'X-Admin-Token': token } });
+            if (!res.ok) { handleLogout(); return; }
+            allData = await res.json();
             renderTable(allData);
-        } catch (e) { showToast('데이터 로드 실패', true); }
+        } catch (_) { showToast('데이터 로드 실패', 'warning'); }
     }
-
     function renderTable(data) {
-        const tableBody = document.getElementById('adminDataTable');
-        tableBody.innerHTML = '';
+        const tbody = document.getElementById('adminDataTable');
+        tbody.innerHTML = '';
+        if (!data.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--toss-sub-text); padding:40px;">신청된 곡이 없습니다.</td></tr>'; return; }
         data.forEach(item => {
-            const date = new Date(item.timestamp).toLocaleDateString();
-            tableBody.innerHTML += `
-                <tr>
-                    <td data-label="시간" style="font-size:12px; color:var(--toss-sub-text)">${date}</td>
-                    <td data-label="제목" style="font-weight:600">${item.title}</td>
-                    <td data-label="가수">${item.artist}</td>
-                    <td data-label="사연" style="font-size:13px">${item.story || '-'}</td>
-                    <td data-label="동작"><button class="delete-btn" onclick="deleteRequest(${item.id})">삭제</button></td>
-                </tr>`;
+            const d = new Date(item.timestamp).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+            tbody.innerHTML += `<tr><td data-label="시간" style="font-size:12px;color:var(--toss-sub-text)">${d}</td><td data-label="제목" style="font-weight:600">${item.title}</td><td data-label="가수">${item.artist}</td><td data-label="사연" style="font-size:13px">${item.story||'-'}</td><td data-label="신청자" style="font-size:12px;color:var(--toss-sub-text)">${item.user_name||'익명'}</td><td data-label="동작"><button class="delete-btn" onclick="deleteRequest(${item.id})">삭제</button></td></tr>`;
         });
     }
-
     function filterData(type, btn) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         btn.classList.add('active');
         const now = new Date();
         let filtered = allData;
-
-        if(type === 'today') {
-            filtered = allData.filter(d => new Date(d.timestamp).toDateString() === now.toDateString());
-        } else if(type === 'week') {
-            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-            filtered = allData.filter(d => new Date(d.timestamp) > weekAgo);
-        }
+        if      (type === 'today') filtered = allData.filter(d => new Date(d.timestamp).toDateString() === now.toDateString());
+        else if (type === 'week')  { const wa = new Date(now - 7*86400000); filtered = allData.filter(d => new Date(d.timestamp) > wa); }
         renderTable(filtered);
     }
-
     async function deleteRequest(id) {
-        if(!confirm('정말 삭제하시겠습니까?')) return;
+        if (!confirm('정말 삭제하시겠습니까?')) return;
         const token = localStorage.getItem('adminToken');
         try {
-            const response = await fetch(`${BASE_URL}/api/admin/delete/${id}`, {
-                method: 'DELETE',
-                headers: { 'X-JBS-KEY': API_KEY, 'X-Admin-Token': token }
-            });
-            if(response.ok) { showDashboard(); }
-        } catch (e) { showToast('삭제 실패', true); }
+            const r = await fetch(`${BASE_URL}/api/admin/delete/${id}`, { method: 'DELETE', headers: { 'X-JBS-KEY': API_KEY, 'X-Admin-Token': token } });
+            if (r.ok) showDashboard();
+        } catch (_) { showToast('삭제 실패', 'warning'); }
     }
+
+    /* ════════════════════════════════════════════════
+       모달 유틸
+    ════════════════════════════════════════════════ */
+    function openModal(id) {
+        const t = document.getElementById(id);
+        t.style.display = 'flex';
+        setTimeout(() => t.classList.add('active'), 10);
+        document.body.style.overflow = 'hidden';
+        window.history.pushState({ modal: id }, '', '#' + id);
+    }
+    function closeModal(id) {
+        const t = document.getElementById(id);
+        if (!t) return;
+        t.classList.remove('active');
+        setTimeout(() => { t.style.display = 'none'; }, 400);
+        document.body.style.overflow = 'auto';
+        if (window.location.hash === '#' + id) window.history.back();
+    }
+    function showErrorModal(msg) {
+        document.getElementById('errorMsg').innerText = msg;
+        document.getElementById('errorDim').style.display = 'block';
+        const m = document.getElementById('errorModal');
+        m.style.display = 'block';
+        setTimeout(() => m.classList.add('active'), 10);
+    }
+    function closeErrorModal() {
+        const m = document.getElementById('errorModal');
+        m.classList.remove('active');
+        setTimeout(() => { m.style.display = 'none'; document.getElementById('errorDim').style.display = 'none'; }, 280);
+    }
+
+    window.onpopstate = () => {
+        document.querySelectorAll('.full-modal.active').forEach(m => { m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; }, 400); });
+        document.body.style.overflow = 'auto';
+    };
+
+    /* 리플 */
+    document.addEventListener('click', e => {
+        const btn = e.target.closest('.apply-btn,.admin-login-btn,.delete-btn,.tab');
+        if (btn) {
+            const r = document.createElement('span'); r.classList.add('ripple');
+            const rect = btn.getBoundingClientRect();
+            r.style.left = `${e.clientX - rect.left}px`; r.style.top = `${e.clientY - rect.top}px`;
+            btn.appendChild(r); setTimeout(() => r.remove(), 600);
+        }
+    });
 
     function checkMobileButton() {
-        const mobileAction = document.getElementById('mobileAction');
-        const isDashboard = document.getElementById('adminDashboard').style.display === 'grid';
-        if(window.innerWidth > 850 || isDashboard) { mobileAction.style.display = 'none'; } 
-        else { mobileAction.style.display = 'block'; }
+        const ma = document.getElementById('mobileAction');
+        ma.style.display = (window.innerWidth > 850 || document.getElementById('adminDashboard').style.display === 'grid') ? 'none' : 'block';
     }
-
     window.addEventListener('resize', checkMobileButton);
+
     window.addEventListener('load', () => {
         updateAuthUI();
         checkMobileButton();
-        if(localStorage.getItem('userNickname') === 'admin') showDashboard();
+        if (localStorage.getItem('userNickname') === 'admin' && localStorage.getItem('adminToken')) showDashboard();
+        syncLocalQueue();
     });
 </script>
 </body>
