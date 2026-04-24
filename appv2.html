@@ -95,26 +95,9 @@
         .feature-item i    { color: var(--toss-blue); margin-bottom: 8px; width: 24px; height: 24px; transition: all 0.28s; }
         .feature-item span { font-size: 13px; font-weight: 600; color: var(--toss-text); transition: all 0.28s; white-space: nowrap; }
 
-        .warn-badge {
-            display: none;
-            width: 18px; height: 18px;
-            background: var(--warn-orange); border-radius: 50%;
-            color: white; font-size: 12px; font-weight: 900;
-            align-items: center; justify-content: center;
-            flex-shrink: 0; line-height: 1;
-        }
+        /* warn-badge 제거됨 */
 
-        /* 접힌 상태 */
-        .feature-item.collapsed {
-            flex-direction: row; min-height: 44px;
-            padding: 10px 12px; gap: 6px; justify-content: center;
-            background: #fff8f0; border-color: #ffd7a8;
-        }
-        .feature-item.collapsed:hover  { transform: none; background: #fff0dc; }
-        .feature-item.collapsed:active { transform: scale(0.95) !important; background: #ffe8c0 !important; }
-        .feature-item.collapsed i      { margin-bottom: 0; width: 15px; height: 15px; color: var(--warn-orange); }
-        .feature-item.collapsed span   { font-size: 11px; color: var(--toss-sub-text); }
-        .feature-item.collapsed .warn-badge { display: flex; animation: shakeLR 0.5s ease-in-out; }
+
 
         /* ── 좌우 흔들림 (회전 없음) ─────────────────── */
         @keyframes shakeLR {
@@ -194,8 +177,9 @@
             display: flex; justify-content: center; align-items: center;
             animation: bounce 0.5s cubic-bezier(0.175,0.885,0.32,1.5) forwards;
         }
-        #overlayIconCircle svg { width: 42px !important; height: 42px !important; }
-        #wipIconWrap       svg { width: 54px !important; height: 54px !important; }
+        #overlayIconCircle svg           { width: 42px !important; height: 42px !important; }
+        #overlayIconCircle.is-warning svg { width: 80px !important; height: 80px !important; }
+        #wipIconWrap       svg           { width: 54px !important; height: 54px !important; }
 
         @keyframes bounce { from { transform: scale(0); } to { transform: scale(1); } }
 
@@ -213,27 +197,60 @@
         .user-info { display: flex; align-items: center; gap: 12px; }
         .nickname { font-weight: 700; color: var(--toss-text); font-size: 15px; }
 
-        /* ── 구글 로그인 ─────────────────────────────── */
-        .google-divider { display: flex; align-items: center; margin: 24px 0 20px; gap: 12px; }
-        .google-divider::before, .google-divider::after { content: ''; flex: 1; height: 1px; background: var(--toss-border); }
-        .google-divider span { font-size: 13px; color: var(--toss-sub-text); white-space: nowrap; }
+        /* ── 로그인 탭 ───────────────────────────────────── */
+        .login-tabs {
+            display: flex; gap: 6px; margin-bottom: 28px;
+            background: var(--toss-grey-bg); border-radius: 14px; padding: 5px;
+        }
+        .login-tab {
+            flex: 1; padding: 10px; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 600; color: var(--toss-sub-text);
+            background: transparent; cursor: pointer; transition: all 0.2s;
+        }
+        .login-tab.active { background: white; color: var(--toss-text); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
 
-        .google-sign-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; border: 1.5px solid var(--toss-border); border-radius: 14px; background: white; font-size: 15px; font-weight: 600; color: var(--toss-text); cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
-        .google-sign-btn:hover { background: #f8faff; border-color: #b8cdf8; }
-        .google-sign-btn:active { transform: scale(0.97); }
+        .field-label { display: block; font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px; }
+        .field-hint  { font-size: 12px; margin: -6px 0 10px 4px; min-height: 16px; }
+        .field-hint.ok  { color: #00b493; }
+        .field-hint.err { color: var(--toss-red); }
 
-        .google-email-step { background: #fff; border: 1.5px solid var(--toss-border); border-radius: 20px; padding: 28px 24px 20px; text-align: center; }
-        .google-g-logo { width: 40px; height: 40px; border-radius: 50%; background: white; border: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-        .google-email-step h3 { font-size: 20px; font-weight: 500; color: #202124; margin-bottom: 6px; }
-        .google-email-step p  { font-size: 14px; color: #5f6368; margin-bottom: 20px; }
-        .google-email-input { width: 100% !important; border: 1px solid #dadce0 !important; border-radius: 6px !important; padding: 13px 15px !important; font-size: 16px !important; background: #fff !important; margin-bottom: 6px !important; transition: 0.2s !important; font-family: inherit; }
-        .google-email-input:focus { outline: none !important; border-color: #1a73e8 !important; box-shadow: 0 0 0 2px rgba(26,115,232,0.2) !important; background: #fff !important; }
-        .google-hint { font-size: 12px; color: #5f6368; text-align: left; margin-bottom: 20px; padding-left: 2px; }
-        .google-actions { display: flex; justify-content: space-between; align-items: center; }
-        .google-cancel-btn { background: none; border: none; color: #1a73e8; font-size: 14px; font-weight: 600; cursor: pointer; padding: 10px 16px; border-radius: 6px; transition: background 0.2s; }
-        .google-cancel-btn:hover { background: rgba(26,115,232,0.06); }
-        .google-next-btn { background: #1a73e8; color: white; border: none; padding: 10px 26px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-        .google-next-btn:hover { background: #1558b0; }
+        /* ── 회원가입 단계 표시 ──────────────────────────── */
+        .step-bar {
+            display: flex; align-items: center; margin-bottom: 32px;
+        }
+        .step-dot {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: #e5e8eb; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; color: var(--toss-sub-text);
+            flex-shrink: 0; transition: all 0.3s;
+        }
+        .step-dot.active   { background: var(--toss-blue); color: white; }
+        .step-dot.done     { background: #00b493; color: white; }
+        .step-line {
+            flex: 1; height: 2px; background: #e5e8eb; transition: background 0.3s;
+        }
+        .step-line.done { background: #00b493; }
+
+        /* 인증코드 입력 */
+        .code-input {
+            width: 100% !important;
+            text-align: center !important;
+            font-size: 32px !important;
+            font-weight: 800 !important;
+            letter-spacing: 10px !important;
+            padding: 20px !important;
+            border: 2px solid var(--toss-border) !important;
+            border-radius: 16px !important;
+            background: var(--toss-grey-bg) !important;
+            font-family: monospace !important;
+            margin-bottom: 0 !important;
+            transition: 0.2s !important;
+        }
+        .code-input:focus {
+            border-color: var(--toss-blue) !important;
+            background: #fff !important;
+            outline: none !important;
+        }
     </style>
 </head>
 <body>
@@ -257,19 +274,19 @@
     <div class="content-area">
         <div class="feature-grid">
             <button class="feature-item" onclick="openModal('applyModal')">
-                <i data-lucide="music"></i><span>음악 신청</span><span class="warn-badge">!</span>
+                <i data-lucide="music"></i><span>음악 신청</span>
             </button>
-            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="megaphone"></i><span>공지사항</span><span class="warn-badge">!</span></button>
-            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="radio"></i><span>실시간 방송</span><span class="warn-badge">!</span></button>
-            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="users"></i><span>커뮤니티</span><span class="warn-badge">!</span></button>
-            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="image"></i><span>갤러리</span><span class="warn-badge">!</span></button>
-            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="calendar"></i><span>일정</span><span class="warn-badge">!</span></button>
-            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="trophy"></i><span>랭킹</span><span class="warn-badge">!</span></button>
-            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="history"></i><span>지난 방송</span><span class="warn-badge">!</span></button>
-            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="message-square"></i><span>건의함</span><span class="warn-badge">!</span></button>
-            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="help-circle"></i><span>FAQ</span><span class="warn-badge">!</span></button>
-            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="folder-open"></i><span>자료실</span><span class="warn-badge">!</span></button>
-            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="user"></i><span>사용자</span><span class="warn-badge">!</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="megaphone"></i><span>공지사항</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="radio"></i><span>실시간 방송</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="users"></i><span>커뮤니티</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="image"></i><span>갤러리</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="calendar"></i><span>일정</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="trophy"></i><span>랭킹</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="history"></i><span>지난 방송</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="message-square"></i><span>건의함</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="help-circle"></i><span>FAQ</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="folder-open"></i><span>자료실</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="user"></i><span>사용자</span></button>
         </div>
 
         <div class="card">
@@ -343,47 +360,110 @@
 <div id="adminModal" class="full-modal">
     <button class="close-x" onclick="closeModal('adminModal')">✕</button>
     <div class="modal-content">
-        <h2 style="font-size:26px; margin-bottom:8px;">로그인</h2>
-        <p style="color:var(--toss-sub-text); margin-bottom:32px;">계정 정보를 입력하여 로그인하세요.</p>
-        <label style="font-size:13px; color:var(--toss-blue); font-weight:600; margin-left:4px;">아이디</label>
-        <input type="text" id="adminId" placeholder="아이디를 입력해주세요" autocomplete="off">
-        <label style="font-size:13px; color:var(--toss-blue); font-weight:600; margin-left:4px;">비밀번호</label>
-        <input type="password" id="adminPw" placeholder="비밀번호를 입력해주세요" onkeydown="if(event.key==='Enter') handleAdminLogin()">
-        <div style="margin-top:20px;"><button class="apply-btn" onclick="handleAdminLogin()">로그인</button></div>
-        <div class="google-divider"><span>또는</span></div>
-        <div id="gStep1">
-            <button class="google-sign-btn" onclick="showGoogleStep()">
-                <svg width="20" height="20" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                Google로 로그인
-            </button>
+
+        <div class="login-tabs">
+            <button class="login-tab active" id="tabStudent" onclick="switchLoginTab('student')">학생</button>
+            <button class="login-tab"        id="tabAdmin"   onclick="switchLoginTab('admin')">관리자</button>
         </div>
-        <div id="gStep2" style="display:none;">
-            <div class="google-email-step">
-                <div class="google-g-logo">
-                    <svg width="22" height="22" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                    </svg>
-                </div>
-                <h3>로그인</h3>
-                <p>JBS 방송국으로 이동</p>
-                <input type="email" class="google-email-input" id="googleEmailInput"
-                       placeholder="학교 이메일 입력"
-                       onkeydown="if(event.key==='Enter') handleGoogleEmailLogin()">
-                <p class="google-hint">중동중학교 계정(@joongdong.ms.kr)을 사용해주세요</p>
-                <div class="google-actions">
-                    <button class="google-cancel-btn" onclick="hideGoogleStep()">취소</button>
-                    <button class="google-next-btn"   onclick="handleGoogleEmailLogin()">로그인</button>
-                </div>
+
+        <!-- 학생 탭 -->
+        <div id="sectionStudent">
+            <h2 style="font-size:24px; margin-bottom:6px; font-weight:800;">로그인</h2>
+            <p style="color:var(--toss-sub-text); margin-bottom:24px; font-size:14px;">학교 이메일과 비밀번호를 입력해주세요.</p>
+            <label class="field-label">학교 이메일</label>
+            <input type="email" id="loginEmail" placeholder="이메일 입력" autocomplete="off"
+                   onkeydown="if(event.key==='Enter') handleStudentLogin()">
+            <label class="field-label" style="margin-top:4px;">비밀번호</label>
+            <input type="password" id="loginPw" placeholder="비밀번호 입력"
+                   onkeydown="if(event.key==='Enter') handleStudentLogin()">
+            <div style="margin-top:20px;">
+                <button class="apply-btn" onclick="handleStudentLogin()">로그인</button>
+            </div>
+            <p style="text-align:center; margin-top:20px; font-size:14px; color:var(--toss-sub-text);">
+                처음이신가요?
+                <button onclick="openRegisterModal()" style="background:none;border:none;color:var(--toss-blue);font-weight:700;cursor:pointer;font-size:14px;">회원가입</button>
+            </p>
+        </div>
+
+        <!-- 관리자 탭 -->
+        <div id="sectionAdmin" style="display:none;">
+            <h2 style="font-size:24px; margin-bottom:6px; font-weight:800;">관리자 로그인</h2>
+            <p style="color:var(--toss-sub-text); margin-bottom:24px; font-size:14px;">관리자 계정으로 로그인하세요.</p>
+            <label class="field-label">아이디</label>
+            <input type="text" id="adminId" placeholder="아이디 입력" autocomplete="off">
+            <label class="field-label" style="margin-top:4px;">비밀번호</label>
+            <input type="password" id="adminPw" placeholder="비밀번호 입력"
+                   onkeydown="if(event.key==='Enter') handleAdminLogin()">
+            <div style="margin-top:20px;">
+                <button class="apply-btn" onclick="handleAdminLogin()">로그인</button>
             </div>
         </div>
+
+    </div>
+</div>
+
+<!-- ── 회원가입 모달 (3단계) ── -->
+<div id="registerModal" class="full-modal">
+    <button class="close-x" onclick="closeModal('registerModal')">✕</button>
+    <div class="modal-content">
+
+        <!-- 단계 표시 -->
+        <div class="step-bar">
+            <div class="step-dot active" id="dot1"></div>
+            <div class="step-line"       id="line12"></div>
+            <div class="step-dot"        id="dot2"></div>
+            <div class="step-line"       id="line23"></div>
+            <div class="step-dot"        id="dot3"></div>
+        </div>
+
+        <!-- Step 1: 이메일 입력 + 코드 발송 -->
+        <div id="regStep1">
+            <h2 style="font-size:24px; margin-bottom:6px; font-weight:800;">이메일 인증</h2>
+            <p style="color:var(--toss-sub-text); margin-bottom:24px; font-size:14px;">학교 이메일로 인증코드를 보내드려요.</p>
+            <label class="field-label">학교 이메일</label>
+            <input type="email" id="regEmail" placeholder="학교 이메일 입력" autocomplete="off"
+                   onkeydown="if(event.key==='Enter') sendVerificationCode()">
+            <p id="regEmailHint" class="field-hint"></p>
+            <div style="margin-top:20px;">
+                <button class="apply-btn" id="btnSendCode" onclick="sendVerificationCode()">인증코드 받기</button>
+            </div>
+        </div>
+
+        <!-- Step 2: 코드 입력 -->
+        <div id="regStep2" style="display:none;">
+            <h2 style="font-size:24px; margin-bottom:6px; font-weight:800;">인증코드 입력</h2>
+            <p style="color:var(--toss-sub-text); margin-bottom:6px; font-size:14px;">
+                <strong id="regEmailDisplay" style="color:var(--toss-text);"></strong>으로<br>인증코드를 발송했어요.
+            </p>
+            <p style="color:var(--toss-sub-text); margin-bottom:24px; font-size:13px;">스팸 메일함도 확인해주세요.</p>
+            <label class="field-label">인증코드 6자리</label>
+            <input type="text" id="regCode" class="code-input" placeholder="000000"
+                   maxlength="6" inputmode="numeric"
+                   onkeydown="if(event.key==='Enter') verifyCode()">
+            <div style="margin-top:20px;">
+                <button class="apply-btn" id="btnVerify" onclick="verifyCode()">인증 확인</button>
+            </div>
+            <p style="text-align:center; margin-top:16px; font-size:13px; color:var(--toss-sub-text);">
+                코드를 못 받으셨나요?
+                <button onclick="goBackToStep1()" style="background:none;border:none;color:var(--toss-blue);font-weight:700;cursor:pointer;font-size:13px;">다시 받기</button>
+            </p>
+        </div>
+
+        <!-- Step 3: 비밀번호 설정 -->
+        <div id="regStep3" style="display:none;">
+            <h2 style="font-size:24px; margin-bottom:6px; font-weight:800;">비밀번호 설정</h2>
+            <p style="color:var(--toss-sub-text); margin-bottom:24px; font-size:14px;">이메일 인증이 완료됐어요.<br>사용할 비밀번호를 설정해주세요.</p>
+            <label class="field-label">비밀번호 <span style="color:var(--toss-sub-text); font-weight:400;">(4자 이상)</span></label>
+            <input type="password" id="regPw" placeholder="비밀번호 입력">
+            <label class="field-label" style="margin-top:4px;">비밀번호 확인</label>
+            <input type="password" id="regPwConfirm" placeholder="비밀번호 재입력"
+                   onkeydown="if(event.key==='Enter') completeRegistration()">
+            <p id="regPwHint" class="field-hint"></p>
+            <div style="margin-top:20px;">
+                <button class="apply-btn" onclick="completeRegistration()">가입 완료</button>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -457,14 +537,19 @@
         circle.style.animation = 'bounce 0.5s cubic-bezier(0.175,0.885,0.32,1.5) forwards';
 
         const map = {
-            success: { icon: 'check',          bg: 'var(--toss-blue)',   sw: '3',   shake: false },
-            error:   { icon: 'x',              bg: 'var(--toss-red)',    sw: '3',   shake: false },
-            warning: { icon: 'triangle-alert', bg: 'var(--warn-orange)', sw: '2.5', shake: true  }
+            success: { icon: 'check',        bg: 'var(--toss-blue)', sw: '3',   shake: false, warn: false },
+            error:   { icon: 'x',            bg: 'var(--toss-red)',  sw: '3',   shake: false, warn: false },
+            warning: { icon: 'alert-circle', bg: 'transparent',      sw: '2',   shake: true,  warn: true  }
         };
         const cfg = map[type] || map.success;
 
         circle.style.background = cfg.bg;
-        injectIcon(circle, cfg.icon, { color: 'white', sw: cfg.sw, shake: cfg.shake });
+        circle.classList.toggle('is-warning', cfg.warn);
+        injectIcon(circle, cfg.icon, {
+            color: cfg.warn ? 'var(--warn-orange)' : 'white',
+            sw: cfg.sw,
+            shake: cfg.shake
+        });
 
         overlay.style.display = 'flex';
         setTimeout(() => { overlay.style.display = 'none'; }, 2200);
@@ -495,43 +580,190 @@
 
     /* 준비 중 버튼 클릭 처리 */
     function handleMockBtn(btn) {
-        // 모달 표시
         openWipModal();
-        // 버튼 접기 (처음 클릭 시)
-        if (!btn.classList.contains('collapsed')) {
-            btn.classList.add('collapsed');
-            lucide.createIcons();
-            // warn-badge 흔들림 재실행
-            const badge = btn.querySelector('.warn-badge');
-            if (badge) { badge.style.animation = 'none'; badge.offsetHeight; badge.style.animation = ''; }
+    }
+
+    /* ════════════════════════════════════════════════
+       로그인 탭 전환
+    ════════════════════════════════════════════════ */
+    function switchLoginTab(tab) {
+        document.getElementById('tabStudent').classList.toggle('active', tab === 'student');
+        document.getElementById('tabAdmin').classList.toggle('active',   tab === 'admin');
+        document.getElementById('sectionStudent').style.display = tab === 'student' ? '' : 'none';
+        document.getElementById('sectionAdmin').style.display   = tab === 'admin'   ? '' : 'none';
+    }
+
+    /* ════════════════════════════════════════════════
+       학생 로그인 (이메일 + 비밀번호)
+    ════════════════════════════════════════════════ */
+    async function handleStudentLogin() {
+        const email    = document.getElementById('loginEmail').value.trim().toLowerCase();
+        const password = document.getElementById('loginPw').value;
+        if (!email || !password) { showToast('이메일과 비밀번호를 입력해주세요.', 'warning'); return; }
+        if (!email.endsWith('@joongdong.ms.kr')) { showToast('학교 이메일을 입력해주세요.', 'warning'); return; }
+        try {
+            const res  = await fetch(`${BASE_URL}/api/user/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                localStorage.setItem('userNickname', data.username);
+                localStorage.setItem('userEmail',    data.email);
+                localStorage.setItem('loginMethod',  'student');
+                showToast('로그인됐어요!', 'success');
+                closeModal('adminModal');
+                updateAuthUI();
+            } else {
+                showToast(data.message || '로그인에 실패했어요.', 'error');
+            }
+        } catch (_) { showToast('서버에 연결할 수 없어요.', 'error'); }
+    }
+
+    /* ════════════════════════════════════════════════
+       회원가입 모달 열기 / 단계 초기화
+    ════════════════════════════════════════════════ */
+    function openRegisterModal() {
+        // 단계 초기화
+        goToRegStep(1);
+        document.getElementById('regEmail').value     = '';
+        document.getElementById('regCode').value      = '';
+        document.getElementById('regPw').value        = '';
+        document.getElementById('regPwConfirm').value = '';
+        document.getElementById('regEmailHint').textContent = '';
+        document.getElementById('regEmailHint').className   = 'field-hint';
+        document.getElementById('regPwHint').textContent    = '';
+        openModal('registerModal');
+    }
+
+    function goToRegStep(n) {
+        [1,2,3].forEach(i => {
+            document.getElementById(`regStep${i}`).style.display = i === n ? '' : 'none';
+        });
+        // 단계 표시 업데이트
+        [1,2,3].forEach(i => {
+            const dot = document.getElementById(`dot${i}`);
+            dot.classList.remove('active','done');
+            if      (i < n)  dot.classList.add('done');
+            else if (i === n) dot.classList.add('active');
+        });
+        if (document.getElementById('line12')) {
+            document.getElementById('line12').classList.toggle('done', n > 1);
+            document.getElementById('line23').classList.toggle('done', n > 2);
+        }
+    }
+
+    function goBackToStep1() {
+        document.getElementById('regCode').value = '';
+        goToRegStep(1);
+    }
+
+    /* ════════════════════════════════════════════════
+       Step 1: 인증코드 발송
+    ════════════════════════════════════════════════ */
+    async function sendVerificationCode() {
+        const email = document.getElementById('regEmail').value.trim().toLowerCase();
+        const hint  = document.getElementById('regEmailHint');
+        if (!email) { showToast('이메일을 입력해주세요.', 'warning'); return; }
+        if (!email.endsWith('@joongdong.ms.kr')) {
+            hint.textContent = '학교 이메일(@joongdong.ms.kr)만 사용할 수 있어요.';
+            hint.className   = 'field-hint err';
+            return;
+        }
+        hint.textContent = '';
+        const btn = document.getElementById('btnSendCode');
+        btn.disabled  = true;
+        btn.innerText = '전송 중...';
+        try {
+            const res  = await fetch(`${BASE_URL}/api/user/send-code`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                document.getElementById('regEmailDisplay').textContent = email;
+                goToRegStep(2);
+                setTimeout(() => document.getElementById('regCode').focus(), 200);
+            } else {
+                hint.textContent = data.message || '전송에 실패했어요.';
+                hint.className   = 'field-hint err';
+            }
+        } catch (_) {
+            hint.textContent = '서버에 연결할 수 없어요.';
+            hint.className   = 'field-hint err';
+        } finally {
+            btn.disabled  = false;
+            btn.innerText = '인증코드 받기';
         }
     }
 
     /* ════════════════════════════════════════════════
-       구글 로그인 (이메일 검증 방식)
+       Step 2: 인증코드 확인
     ════════════════════════════════════════════════ */
-    function showGoogleStep() {
-        document.getElementById('gStep1').style.display = 'none';
-        document.getElementById('gStep2').style.display = 'block';
-        setTimeout(() => document.getElementById('googleEmailInput').focus(), 150);
+    async function verifyCode() {
+        const email = document.getElementById('regEmail').value.trim().toLowerCase();
+        const code  = document.getElementById('regCode').value.trim();
+        if (code.length !== 6) { showToast('6자리 코드를 입력해주세요.', 'warning'); return; }
+        const btn = document.getElementById('btnVerify');
+        btn.disabled  = true;
+        btn.innerText = '확인 중...';
+        try {
+            const res  = await fetch(`${BASE_URL}/api/user/verify-code`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
+                body: JSON.stringify({ email, code })
+            });
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                goToRegStep(3);
+                setTimeout(() => document.getElementById('regPw').focus(), 200);
+            } else {
+                showToast(data.message || '코드가 올바르지 않아요.', 'error');
+            }
+        } catch (_) { showToast('서버에 연결할 수 없어요.', 'error'); }
+        finally {
+            btn.disabled  = false;
+            btn.innerText = '인증 확인';
+        }
     }
-    function hideGoogleStep() {
-        document.getElementById('gStep2').style.display = 'none';
-        document.getElementById('gStep1').style.display = 'block';
-        document.getElementById('googleEmailInput').value = '';
-    }
-    function handleGoogleEmailLogin() {
-        const email = document.getElementById('googleEmailInput').value.trim().toLowerCase();
-        if (!email) { showToast('이메일을 입력해주세요.', 'warning'); return; }
-        if (!email.endsWith('@joongdong.ms.kr')) { showErrorModal('중동중학교 계정(@joongdong.ms.kr)만 이용 가능합니다.'); return; }
-        const name = email.split('@')[0];
-        localStorage.setItem('userNickname', name);
-        localStorage.setItem('userEmail',    email);
-        localStorage.setItem('loginMethod',  'google');
-        showToast('Google 계정으로 로그인됐어요!', 'success');
-        closeModal('adminModal');
-        hideGoogleStep();
-        updateAuthUI();
+
+    /* ════════════════════════════════════════════════
+       Step 3: 비밀번호 설정 + 가입 완료
+    ════════════════════════════════════════════════ */
+    async function completeRegistration() {
+        const email   = document.getElementById('regEmail').value.trim().toLowerCase();
+        const pw      = document.getElementById('regPw').value;
+        const confirm = document.getElementById('regPwConfirm').value;
+        const hint    = document.getElementById('regPwHint');
+        if (!pw || !confirm) { showToast('비밀번호를 입력해주세요.', 'warning'); return; }
+        if (pw.length < 4)   { showToast('비밀번호는 4자 이상이어야 해요.', 'warning'); return; }
+        if (pw !== confirm) {
+            hint.textContent = '비밀번호가 일치하지 않아요.';
+            hint.className   = 'field-hint err';
+            return;
+        }
+        hint.textContent = '';
+        try {
+            const res  = await fetch(`${BASE_URL}/api/user/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
+                body: JSON.stringify({ email, password: pw })
+            });
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                showToast('가입이 완료됐어요! 로그인해주세요.', 'success');
+                closeModal('registerModal');
+                // 로그인 모달로 전환
+                setTimeout(() => {
+                    document.getElementById('loginEmail').value = email;
+                    openModal('adminModal');
+                }, 400);
+            } else {
+                showToast(data.message || '가입에 실패했어요.', 'error');
+            }
+        } catch (_) { showToast('서버에 연결할 수 없어요.', 'error'); }
     }
 
     /* ════════════════════════════════════════════════
@@ -625,13 +857,10 @@
         location.reload();
     }
     function updateAuthUI() {
-        const nick   = localStorage.getItem('userNickname');
-        const method = localStorage.getItem('loginMethod');
+        const nick = localStorage.getItem('userNickname');
         if (!nick) return;
-        const gBadge = method === 'google'
-            ? `<svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:3px;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>` : '';
         document.getElementById('navAuthArea').innerHTML = `
-            <span class="nickname">${gBadge}${nick}님</span>
+            <span class="nickname">${nick}님</span>
             <button class="admin-login-btn" onclick="handleLogout()" style="color:var(--toss-red)">로그아웃</button>`;
     }
 
@@ -740,3 +969,4 @@
 </script>
 </body>
 </html>
+
