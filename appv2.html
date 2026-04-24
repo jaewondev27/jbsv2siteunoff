@@ -767,7 +767,7 @@
     }
 
     /* ════════════════════════════════════════════════
-       음악 신청
+       음악 신청 (완전 재작성 - 백엔드 직접 호출)
     ════════════════════════════════════════════════ */
     async function submitMusic() {
         const title    = document.getElementById('songTitle').value.trim();
@@ -784,56 +784,101 @@
         btn.disabled  = true;
         btn.innerText = '전송 중...';
 
-        const payload = { title, artist, story, userName };
-        let   success = false;
-
         try {
-            const ctrl = new AbortController();
-            const tid  = setTimeout(() => ctrl.abort(), 6000);
-            const res  = await fetch(`${BASE_URL}/api/request`, {
-                method: 'POST',
+            const res = await fetch(`${BASE_URL}/api/music/submit`, {
+                method:  'POST',
                 headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
-                body:   JSON.stringify(payload),
-                signal: ctrl.signal
+                body:    JSON.stringify({ title, artist, story, userName })
             });
-            clearTimeout(tid);
-            if (res.ok && (await res.json()).status === 'success') success = true;
-        } catch (_) { /* 오프라인 폴백 */ }
+            const data = await res.json();
 
-        if (!success) saveToLocalQueue(payload);
-        showToast(success ? '신청이 완료됐어요! 🎵' : '신청이 접수됐어요! (오프라인 저장)', 'success');
-
-        document.getElementById('songTitle').value = '';
-        document.getElementById('artist').value    = '';
-        document.getElementById('story').value     = '';
-        closeModal('applyModal');
-        btn.disabled  = false;
-        btn.innerText = '신청 완료';
-    }
-
-    function saveToLocalQueue(data) {
-        try {
-            const q = JSON.parse(localStorage.getItem('musicQueue') || '[]');
-            q.push({ ...data, timestamp: new Date().toISOString(), _lid: Date.now() });
-            localStorage.setItem('musicQueue', JSON.stringify(q));
-        } catch (_) {}
-    }
-    async function syncLocalQueue() {
-        let q = []; try { q = JSON.parse(localStorage.getItem('musicQueue') || '[]'); } catch (_) { return; }
-        if (!q.length) return;
-        const synced = [];
-        for (const item of q) {
-            try {
-                const r = await fetch(`${BASE_URL}/api/request`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY }, body: JSON.stringify(item) });
-                if (r.ok) synced.push(item._lid);
-            } catch (_) { break; }
+            if (res.ok && data.status === 'success') {
+                document.getElementById('songTitle').value = '';
+                document.getElementById('artist').value    = '';
+                document.getElementById('story').value     = '';
+                closeModal('applyModal');
+                showToast('신청이 완료됐어요! 🎵', 'success');
+            } else {
+                showToast(data.message || '신청에 실패했어요.', 'error');
+            }
+        } catch (_) {
+            showToast('서버에 연결할 수 없어요. 잠시 후 다시 시도해주세요.', 'error');
+        } finally {
+            btn.disabled  = false;
+            btn.innerText = '신청 완료';
         }
-        if (synced.length) localStorage.setItem('musicQueue', JSON.stringify(q.filter(i => !synced.includes(i._lid))));
     }
 
     /* ════════════════════════════════════════════════
-       관리자 로그인 / 로그아웃
+       모달 유틸 — History API 기반 (? 없이 경로 변경)
+       /login  /apply  /register  → 뒤로가기로 닫힘
     ════════════════════════════════════════════════ */
+    const MODAL_PATHS = {
+        adminModal:    '/login',
+        applyModal:    '/apply',
+        registerModal: '/register',
+    };
+
+    function openModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.display = 'flex';
+        setTimeout(() => el.classList.add('active'), 10);
+        document.body.style.overflow = 'hidden';
+        const path = MODAL_PATHS[id] || '/' + id;
+        window.history.pushState({ modal: id }, '', path);
+    }
+
+    function closeModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove('active');
+        setTimeout(() => { el.style.display = 'none'; }, 400);
+        document.body.style.overflow = 'auto';
+        // 현재 경로가 이 모달 경로면 뒤로 이동
+        const path = MODAL_PATHS[id] || '/' + id;
+        if (window.location.pathname === path) window.history.back();
+    }
+
+    function showErrorModal(msg) {
+        document.getElementById('errorMsg').innerText = msg;
+        document.getElementById('errorDim').style.display = 'block';
+        const m = document.getElementById('errorModal');
+        m.style.display = 'block';
+        setTimeout(() => m.classList.add('active'), 10);
+    }
+    function closeErrorModal() {
+        const m = document.getElementById('errorModal');
+        m.classList.remove('active');
+        setTimeout(() => {
+            m.style.display = 'none';
+            document.getElementById('errorDim').style.display = 'none';
+        }, 280);
+    }
+
+    // 뒤로가기 → 열린 모달 닫기
+    window.addEventListener('popstate', () => {
+        document.querySelectorAll('.full-modal.active').forEach(m => {
+            m.classList.remove('active');
+            setTimeout(() => { m.style.display = 'none'; }, 400);
+        });
+        document.body.style.overflow = 'auto';
+    });
+
+    // 페이지 진입 시 경로에 맞는 모달 자동 오픈
+    (function handleInitialPath() {
+        const path = window.location.pathname;
+        const entry = Object.entries(MODAL_PATHS).find(([, p]) => p === path);
+        if (entry) {
+            const [id] = entry;
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.display = 'flex';
+                setTimeout(() => el.classList.add('active'), 10);
+                document.body.style.overflow = 'hidden';
+            }
+        }
+    })();
     async function handleAdminLogin() {
         const id = document.getElementById('adminId').value.trim();
         const pw = document.getElementById('adminPw').value;
@@ -907,42 +952,6 @@
         } catch (_) { showToast('삭제 실패', 'warning'); }
     }
 
-    /* ════════════════════════════════════════════════
-       모달 유틸
-    ════════════════════════════════════════════════ */
-    function openModal(id) {
-        const t = document.getElementById(id);
-        t.style.display = 'flex';
-        setTimeout(() => t.classList.add('active'), 10);
-        document.body.style.overflow = 'hidden';
-        window.history.pushState({ modal: id }, '', '#' + id);
-    }
-    function closeModal(id) {
-        const t = document.getElementById(id);
-        if (!t) return;
-        t.classList.remove('active');
-        setTimeout(() => { t.style.display = 'none'; }, 400);
-        document.body.style.overflow = 'auto';
-        if (window.location.hash === '#' + id) window.history.back();
-    }
-    function showErrorModal(msg) {
-        document.getElementById('errorMsg').innerText = msg;
-        document.getElementById('errorDim').style.display = 'block';
-        const m = document.getElementById('errorModal');
-        m.style.display = 'block';
-        setTimeout(() => m.classList.add('active'), 10);
-    }
-    function closeErrorModal() {
-        const m = document.getElementById('errorModal');
-        m.classList.remove('active');
-        setTimeout(() => { m.style.display = 'none'; document.getElementById('errorDim').style.display = 'none'; }, 280);
-    }
-
-    window.onpopstate = () => {
-        document.querySelectorAll('.full-modal.active').forEach(m => { m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; }, 400); });
-        document.body.style.overflow = 'auto';
-    };
-
     /* 리플 */
     document.addEventListener('click', e => {
         const btn = e.target.closest('.apply-btn,.admin-login-btn,.delete-btn,.tab');
@@ -964,9 +973,7 @@
         updateAuthUI();
         checkMobileButton();
         if (localStorage.getItem('userNickname') === 'admin' && localStorage.getItem('adminToken')) showDashboard();
-        syncLocalQueue();
     });
 </script>
 </body>
 </html>
-
