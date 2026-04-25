@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JBS | 중동중학교 방송부</title>
-    <script src="https://unpkg.com/bad-words@3.0.4/lib/bad-words.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -251,6 +250,86 @@
             background: #fff !important;
             outline: none !important;
         }
+
+        /* ── 엔터프라이즈 어드민 패널 ─────────────────── */
+        .admin-stats-grid {
+            display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 0;
+        }
+        @media (max-width: 700px) { .admin-stats-grid { grid-template-columns: repeat(2,1fr); } }
+        .stat-card {
+            background: #fff; border-radius: 20px; padding: 22px 24px;
+            display: flex; align-items: center; gap: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid var(--toss-border);
+        }
+        .stat-icon {
+            width: 48px; height: 48px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .stat-icon.blue   { background: #eff6ff; color: #3182f6; }
+        .stat-icon.green  { background: #ecfdf5; color: #00b493; }
+        .stat-icon.purple { background: #f5f3ff; color: #7c3aed; }
+        .stat-icon.orange { background: #fff7ed; color: #ea580c; }
+        .stat-icon svg { width: 22px; height: 22px; }
+        .stat-value { font-size: 28px; font-weight: 800; color: var(--toss-text); line-height: 1; }
+        .stat-label { font-size: 13px; color: var(--toss-sub-text); margin-top: 4px; font-weight: 500; }
+        .admin-main-card { padding: 0 !important; overflow: hidden; }
+        .admin-toolbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 24px 28px 0; gap: 12px; flex-wrap: wrap;
+        }
+        .admin-title-row { display: flex; align-items: center; gap: 10px; }
+        .admin-title-row h2 { font-size: 18px; font-weight: 800; }
+        .admin-badge {
+            background: var(--toss-blue); color: white;
+            font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+        }
+        .admin-toolbar-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .admin-search-wrap {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--toss-grey-bg); border-radius: 12px; padding: 10px 14px;
+            border: 1px solid var(--toss-border); min-width: 220px;
+        }
+        .admin-search-wrap svg { width: 16px; height: 16px; color: var(--toss-sub-text); flex-shrink: 0; }
+        .admin-search-wrap input {
+            border: none; background: none; outline: none;
+            font-size: 14px; width: 100%; margin: 0; padding: 0; font-family: inherit;
+        }
+        .admin-icon-btn {
+            width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--toss-border);
+            background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; color: var(--toss-sub-text);
+        }
+        .admin-icon-btn:hover { background: var(--toss-grey-bg); }
+        .admin-icon-btn svg { width: 16px; height: 16px; }
+        .admin-csv-btn {
+            display: flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 10px;
+            border: 1px solid var(--toss-border); background: #fff; cursor: pointer;
+            font-size: 13px; font-weight: 600; color: var(--toss-sub-text); transition: all 0.2s;
+        }
+        .admin-csv-btn:hover { background: var(--toss-grey-bg); }
+        .admin-csv-btn svg { width: 14px; height: 14px; }
+        .admin-filter-area { padding: 16px 28px 0; }
+        .admin-table-wrap { overflow-x: auto; }
+        .admin-main-card .dash-table th { padding: 12px 16px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; }
+        .admin-main-card .dash-table td { padding: 14px 16px; }
+        .admin-empty-state { text-align: center; padding: 60px 20px; color: var(--toss-sub-text); }
+        .admin-empty-state .empty-emoji { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+        .admin-empty-state p { font-size: 15px; margin-top: 4px; }
+        .admin-logout-bar {
+            padding: 18px 28px; border-top: 1px solid var(--toss-border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .admin-footer-info { font-size: 12px; color: var(--toss-sub-text); }
+        .user-tag {
+            display: inline-block; font-size: 12px; background: var(--toss-grey-bg);
+            padding: 3px 8px; border-radius: 6px; font-weight: 600;
+        }
+        .story-cell {
+            max-width: 160px; overflow: hidden; text-overflow: ellipsis;
+            white-space: nowrap; font-size: 13px; cursor: help;
+        }
+        @keyframes rowFade { to { opacity: 0; transform: translateX(16px); } }
+        .row-delete-anim { animation: rowFade 0.28s ease-out forwards; }
     </style>
 </head>
 <body>
@@ -273,7 +352,7 @@
 
     <div class="content-area">
         <div class="feature-grid">
-            <button class="feature-item" onclick="openModal('applyModal')">
+            <button class="feature-item" onclick="openApplyModal()">
                 <i data-lucide="music"></i><span>음악 신청</span>
             </button>
             <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="megaphone"></i><span>공지사항</span></button>
@@ -310,32 +389,75 @@
         <div class="card" style="position:sticky; top:100px;">
             <div class="card-title">음악 신청</div>
             <p style="font-size:14px; color:var(--toss-sub-text); margin-bottom:20px;">지금 바로 신청곡을 보내보세요.<br>선정된 곡은 점심시간에 방송됩니다.</p>
-            <button class="apply-btn" onclick="openModal('applyModal')">곡 신청하기</button>
+            <button class="apply-btn" onclick="openApplyModal()">곡 신청하기</button>
         </div>
     </div>
 </div>
 
 <!-- 관리자 대시보드 -->
 <div class="main-wrapper" id="adminDashboard" style="display:none; grid-template-columns:1fr;">
-    <div class="card">
-        <div class="card-title">JBS 신청곡 대시보드</div>
-        <div class="filter-tabs">
-            <button class="tab active" onclick="filterData('all',this)">전체</button>
-            <button class="tab" onclick="filterData('week',this)">이번 주</button>
-            <button class="tab" onclick="filterData('today',this)">오늘</button>
+    <!-- 통계 카드 -->
+    <div class="admin-stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue"><i data-lucide="music"></i></div>
+            <div><div class="stat-value" id="statTotal">-</div><div class="stat-label">전체 신청</div></div>
         </div>
-        <div style="overflow-x:auto;">
+        <div class="stat-card">
+            <div class="stat-icon green"><i data-lucide="calendar"></i></div>
+            <div><div class="stat-value" id="statToday">-</div><div class="stat-label">오늘 신청</div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon purple"><i data-lucide="trending-up"></i></div>
+            <div><div class="stat-value" id="statWeek">-</div><div class="stat-label">이번 주</div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon orange"><i data-lucide="users"></i></div>
+            <div><div class="stat-value" id="statUsers">-</div><div class="stat-label">신청자 수</div></div>
+        </div>
+    </div>
+
+    <!-- 메인 카드 -->
+    <div class="card admin-main-card">
+        <div class="admin-toolbar">
+            <div class="admin-title-row">
+                <h2>신청곡 관리</h2>
+                <span class="admin-badge" id="adminBadgeCount">0건</span>
+            </div>
+            <div class="admin-toolbar-actions">
+                <div class="admin-search-wrap">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="adminSearch" placeholder="제목, 가수, 신청자 검색..." oninput="searchData(this.value)">
+                </div>
+                <button class="admin-icon-btn" onclick="showDashboard()" title="새로고침">
+                    <i data-lucide="refresh-cw"></i>
+                </button>
+                <button class="admin-csv-btn" onclick="exportCSV()">
+                    <i data-lucide="download"></i>CSV 내보내기
+                </button>
+            </div>
+        </div>
+        <div class="admin-filter-area">
+            <div class="filter-tabs">
+                <button class="tab active" onclick="filterData('all',this)">전체</button>
+                <button class="tab" onclick="filterData('week',this)">이번 주</button>
+                <button class="tab" onclick="filterData('today',this)">오늘</button>
+            </div>
+        </div>
+        <div class="admin-table-wrap">
             <table class="dash-table">
-                <thead><tr><th>시간</th><th>제목</th><th>가수</th><th>사연</th><th>신청자</th><th>동작</th></tr></thead>
+                <thead><tr><th>#</th><th>시간</th><th>제목</th><th>가수</th><th>사연</th><th>신청자</th><th>동작</th></tr></thead>
                 <tbody id="adminDataTable"></tbody>
             </table>
         </div>
-        <button class="admin-login-btn" onclick="handleLogout()" style="margin-top:20px; color:var(--toss-red)">로그아웃</button>
+        <div class="admin-logout-bar">
+            <span class="admin-footer-info" id="adminFooterInfo">JBS 관리자 패널</span>
+            <button class="admin-login-btn" onclick="handleLogout()" style="color:var(--toss-red)">로그아웃</button>
+        </div>
     </div>
 </div>
 
 <div class="floating-action" id="mobileAction">
-    <button class="apply-btn" onclick="openModal('applyModal')">노래 신청하기</button>
+    <button class="apply-btn" onclick="openApplyModal()">노래 신청하기</button>
 </div>
 
 <!-- ── 음악 신청 모달 ── -->
@@ -497,8 +619,13 @@
 
     lucide.createIcons();
 
-    const filter = new Filter();
-    filter.addWords('시발','지랄','개새끼','병신','미친','노무','일베');
+    const _badWordsList = ['시발','지랄','개새끼','병신','미친','노무','일베'];
+    const filter = {
+        isProfane: function(t) {
+            if (typeof t !== 'string') return false;
+            return _badWordsList.some(function(w) { return t.includes(w); });
+        }
+    };
 
     /* ════════════════════════════════════════════════
        Lucide 아이콘 동적 주입 헬퍼
@@ -616,9 +743,9 @@
                 closeModal('adminModal');
                 updateAuthUI();
             } else {
-                showToast(data.message || '로그인에 실패했어요.', 'error');
+                showToast(`[HTTP ${res.status}] ${data.message || '로그인에 실패했어요.'}`, 'error');
             }
-        } catch (_) { showToast('서버에 연결할 수 없어요.', 'error'); }
+        } catch (err) { showToast('네트워크 오류: ' + err.message, 'error'); }
     }
 
     /* ════════════════════════════════════════════════
@@ -687,11 +814,11 @@
                 goToRegStep(2);
                 setTimeout(() => document.getElementById('regCode').focus(), 200);
             } else {
-                hint.textContent = data.message || '전송에 실패했어요.';
+                hint.textContent = `[HTTP ${res.status}] ${data.message || '전송에 실패했어요.'}`;
                 hint.className   = 'field-hint err';
             }
-        } catch (_) {
-            hint.textContent = '서버에 연결할 수 없어요.';
+        } catch (err) {
+            hint.textContent = '네트워크 오류: ' + err.message;
             hint.className   = 'field-hint err';
         } finally {
             btn.disabled  = false;
@@ -720,9 +847,9 @@
                 goToRegStep(3);
                 setTimeout(() => document.getElementById('regPw').focus(), 200);
             } else {
-                showToast(data.message || '코드가 올바르지 않아요.', 'error');
+                showToast(`[HTTP ${res.status}] ${data.message || '코드가 올바르지 않아요.'}`, 'error');
             }
-        } catch (_) { showToast('서버에 연결할 수 없어요.', 'error'); }
+        } catch (err) { showToast('네트워크 오류: ' + err.message, 'error'); }
         finally {
             btn.disabled  = false;
             btn.innerText = '인증 확인';
@@ -761,9 +888,21 @@
                     openModal('adminModal');
                 }, 400);
             } else {
-                showToast(data.message || '가입에 실패했어요.', 'error');
+                showToast(`[HTTP ${res.status}] ${data.message || '가입에 실패했어요.'}`, 'error');
             }
-        } catch (_) { showToast('서버에 연결할 수 없어요.', 'error'); }
+        } catch (err) { showToast('네트워크 오류: ' + err.message, 'error'); }
+    }
+
+    /* ════════════════════════════════════════════════
+       음악 신청 버튼 — 비로그인 시 로그인 모달로
+    ════════════════════════════════════════════════ */
+    function openApplyModal() {
+        if (!localStorage.getItem('userNickname')) {
+            showToast('로그인 후 음악 신청이 가능해요.', 'warning');
+            setTimeout(() => openModal('adminModal'), 350);
+            return;
+        }
+        openModal('applyModal');
     }
 
     /* ════════════════════════════════════════════════
@@ -799,10 +938,10 @@
                 closeModal('applyModal');
                 showToast('신청이 완료됐어요! 🎵', 'success');
             } else {
-                showToast(data.message || '신청에 실패했어요.', 'error');
+                showToast(`[HTTP ${res.status}] ${data.message || '신청에 실패했어요.'}`, 'error');
             }
-        } catch (_) {
-            showToast('서버에 연결할 수 없어요. 잠시 후 다시 시도해주세요.', 'error');
+        } catch (err) {
+            showToast('네트워크 오류: ' + err.message, 'error');
         } finally {
             btn.disabled  = false;
             btn.innerText = '신청 완료';
@@ -894,8 +1033,8 @@
                 closeModal('adminModal');
                 updateAuthUI();
                 if (id === 'admin') showDashboard();
-            } else { showErrorModal('로그인 정보가 틀렸습니다.'); }
-        } catch (_) { showErrorModal('서버 통신 오류가 발생했습니다.'); }
+            } else { showErrorModal(`[HTTP ${res.status}] 로그인 정보가 틀렸습니다.`); }
+        } catch (err) { showErrorModal('네트워크 오류: ' + err.message); }
     }
     function handleLogout() {
         ['adminToken','userNickname','userEmail','loginMethod'].forEach(k => localStorage.removeItem(k));
@@ -922,34 +1061,99 @@
             const res = await fetch(`${BASE_URL}/api/admin/data`, { headers: { 'X-JBS-KEY': API_KEY, 'X-Admin-Token': token } });
             if (!res.ok) { handleLogout(); return; }
             allData = await res.json();
+            updateStats(allData);
             renderTable(allData);
-        } catch (_) { showToast('데이터 로드 실패', 'warning'); }
+            lucide.createIcons();
+        } catch (err) { showToast('데이터 로드 실패: ' + err.message, 'warning'); }
+    }
+    function updateStats(data) {
+        const now = new Date();
+        const todayStr = now.toDateString();
+        const weekAgo  = new Date(now - 7 * 86400000);
+        const todayCount  = data.filter(d => new Date(d.timestamp).toDateString() === todayStr).length;
+        const weekCount   = data.filter(d => new Date(d.timestamp) > weekAgo).length;
+        const uniqueUsers = new Set(data.map(d => d.user_name).filter(Boolean)).size;
+        document.getElementById('statTotal').textContent = data.length;
+        document.getElementById('statToday').textContent = todayCount;
+        document.getElementById('statWeek').textContent  = weekCount;
+        document.getElementById('statUsers').textContent = uniqueUsers;
+        document.getElementById('adminBadgeCount').textContent = data.length + '건';
+        document.getElementById('adminFooterInfo').textContent =
+            `마지막 업데이트: ${now.toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}`;
     }
     function renderTable(data) {
         const tbody = document.getElementById('adminDataTable');
         tbody.innerHTML = '';
-        if (!data.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--toss-sub-text); padding:40px;">신청된 곡이 없습니다.</td></tr>'; return; }
-        data.forEach(item => {
+        document.getElementById('adminBadgeCount').textContent = data.length + '건';
+        if (!data.length) {
+            tbody.innerHTML = `<tr><td colspan="7"><div class="admin-empty-state"><div class="empty-emoji">🎵</div><p>신청된 곡이 없어요</p></div></td></tr>`;
+            return;
+        }
+        data.forEach((item, idx) => {
             const d = new Date(item.timestamp).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
-            tbody.innerHTML += `<tr><td data-label="시간" style="font-size:12px;color:var(--toss-sub-text)">${d}</td><td data-label="제목" style="font-weight:600">${item.title}</td><td data-label="가수">${item.artist}</td><td data-label="사연" style="font-size:13px">${item.story||'-'}</td><td data-label="신청자" style="font-size:12px;color:var(--toss-sub-text)">${item.user_name||'익명'}</td><td data-label="동작"><button class="delete-btn" onclick="deleteRequest(${item.id})">삭제</button></td></tr>`;
+            const storyHtml = item.story
+                ? `<span class="story-cell" title="${item.story}">${item.story}</span>`
+                : `<span style="color:#c1c5cc">-</span>`;
+            tbody.innerHTML += `<tr id="row-${item.id}">
+                <td data-label="#" style="font-size:12px;color:#c1c5cc;font-weight:700">${idx+1}</td>
+                <td data-label="시간" style="white-space:nowrap"><span style="font-size:12px;color:var(--toss-sub-text)">${d}</span></td>
+                <td data-label="제목"><span style="font-weight:700">${item.title}</span></td>
+                <td data-label="가수" style="color:var(--toss-sub-text)">${item.artist}</td>
+                <td data-label="사연">${storyHtml}</td>
+                <td data-label="신청자"><span class="user-tag">${item.user_name||'익명'}</span></td>
+                <td data-label="동작"><button class="delete-btn" onclick="deleteRequest(${item.id})">삭제</button></td>
+            </tr>`;
         });
     }
     function filterData(type, btn) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         btn.classList.add('active');
+        const searchEl = document.getElementById('adminSearch');
+        if (searchEl) searchEl.value = '';
         const now = new Date();
         let filtered = allData;
         if      (type === 'today') filtered = allData.filter(d => new Date(d.timestamp).toDateString() === now.toDateString());
         else if (type === 'week')  { const wa = new Date(now - 7*86400000); filtered = allData.filter(d => new Date(d.timestamp) > wa); }
         renderTable(filtered);
     }
+    function searchData(q) {
+        q = q.toLowerCase().trim();
+        const filtered = q ? allData.filter(d =>
+            (d.title||'').toLowerCase().includes(q) ||
+            (d.artist||'').toLowerCase().includes(q) ||
+            (d.user_name||'').toLowerCase().includes(q) ||
+            (d.story||'').toLowerCase().includes(q)
+        ) : allData;
+        renderTable(filtered);
+    }
+    function exportCSV() {
+        if (!allData.length) { showToast('내보낼 데이터가 없어요.', 'warning'); return; }
+        const header = ['번호','시간','제목','가수','사연','신청자'];
+        const rows = allData.map((d, i) => [
+            i+1,
+            new Date(d.timestamp).toLocaleString('ko-KR'),
+            `"${(d.title||'').replace(/"/g,'""')}"`,
+            `"${(d.artist||'').replace(/"/g,'""')}"`,
+            `"${(d.story||'').replace(/"/g,'""')}"`,
+            d.user_name||'익명'
+        ]);
+        const csv = '\uFEFF' + [header, ...rows].map(r => r.join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `JBS_신청곡_${new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','')}csv`;
+        a.click();
+        showToast('CSV 파일을 다운로드했어요.', 'success');
+    }
     async function deleteRequest(id) {
         if (!confirm('정말 삭제하시겠습니까?')) return;
         const token = localStorage.getItem('adminToken');
+        const row = document.getElementById(`row-${id}`);
+        if (row) { row.classList.add('row-delete-anim'); await new Promise(r => setTimeout(r, 280)); }
         try {
             const r = await fetch(`${BASE_URL}/api/admin/delete/${id}`, { method: 'DELETE', headers: { 'X-JBS-KEY': API_KEY, 'X-Admin-Token': token } });
             if (r.ok) showDashboard();
-        } catch (_) { showToast('삭제 실패', 'warning'); }
+        } catch (err) { showToast('삭제 실패: ' + err.message, 'warning'); }
     }
 
     /* 리플 */
