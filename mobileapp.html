@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JBS | 중동중학교 방송부</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --toss-blue: #3182f6;
+            --toss-blue-hover: #1b64da;
+            --toss-grey-bg: #f2f4f6;
+            --toss-card: #ffffff;
+            --toss-text: #191f28;
+            --toss-sub-text: #4e5968;
+            --toss-border: #e5e8eb;
+            --toss-red: #f04452;
+            --warn-orange: #ff9500;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+            background-color: var(--toss-grey-bg);
+            color: var(--toss-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        nav {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            border-bottom: 1px solid var(--toss-border);
+        }
+        .nav-content {
+            max-width: 1000px; margin: 0 auto; padding: 16px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 22px; font-weight: 800; color: var(--toss-blue); letter-spacing: -0.5px; cursor: pointer; }
+        .admin-login-btn {
+            font-size: 14px; font-weight: 600; color: var(--toss-sub-text);
+            padding: 8px 12px; border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+            cursor: pointer; border: none; background: none;
+            position: relative; overflow: hidden;
+        }
+        .admin-login-btn:hover { background: var(--toss-grey-bg); transform: scale(0.98); }
+        .admin-login-btn:active { transform: scale(0.95); }
+
+        .main-wrapper {
+            max-width: 1000px; margin: 80px auto 100px; padding: 20px;
+            display: grid; grid-template-columns: 1fr 340px; gap: 24px;
+        }
+
+        @media (max-width: 850px) {
+            .main-wrapper { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .hero h1 { font-size: 24px !important; }
+            .hero p  { font-size: 16px !important; }
+            .dash-table thead { display: none; }
+            .dash-table, .dash-table tbody, .dash-table tr, .dash-table td { display: block; width: 100%; }
+            .dash-table tr { margin-bottom: 16px; padding: 16px; background: #f9fafb; border-radius: 16px; border: 1px solid var(--toss-border); }
+            .dash-table td { padding: 4px 0; border: none; }
+            .dash-table td:before { content: attr(data-label); font-weight: 700; color: var(--toss-sub-text); margin-right: 8px; font-size: 13px; }
+            .delete-btn { width: 100%; margin-top: 10px; padding: 12px; }
+        }
+
+        .card { background: var(--toss-card); border-radius: 24px; padding: 30px; margin-bottom: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.02); }
+        .card-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+
+        .hero { grid-column: 1 / -1; padding: 50px 40px; background: var(--toss-card); }
+        .hero h1 { font-size: 32px; font-weight: 800; line-height: 1.3; }
+        .hero p  { color: var(--toss-sub-text); margin-top: 15px; font-size: 18px; }
+
+        /* ── 기능 그리드 ─────────────────────────────── */
+        .feature-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
+        @media (max-width: 600px) { .feature-grid { grid-template-columns: repeat(3,1fr); } }
+
+        .feature-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 16px 8px; min-height: 88px;
+            background: var(--toss-card); border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.28s cubic-bezier(0.4,0,0.2,1);
+            border: 1.5px solid transparent;
+            position: relative; overflow: hidden;
+        }
+        .feature-item:hover  { background: #f9fafb; transform: translateY(-2px); }
+        .feature-item:active { transform: scale(0.93) !important; background: #eef4ff !important; }
+
+        .feature-item i    { color: var(--toss-blue); margin-bottom: 8px; width: 24px; height: 24px; transition: all 0.28s; }
+        .feature-item span { font-size: 13px; font-weight: 600; color: var(--toss-text); transition: all 0.28s; white-space: nowrap; }
+
+        /* warn-badge 제거됨 */
+
+
+
+        /* ── 좌우 흔들림 (회전 없음) ─────────────────── */
+        @keyframes shakeLR {
+            0%,100% { transform: translateX(0); }
+            20%     { transform: translateX(-7px); }
+            40%     { transform: translateX(7px); }
+            60%     { transform: translateX(-5px); }
+            80%     { transform: translateX(5px); }
+        }
+
+        /* ── 공통 ────────────────────────────────────── */
+        .schedule-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--toss-grey-bg); }
+        .schedule-item:last-child { border: none; }
+        .time { font-weight: 600; color: var(--toss-blue); width: 80px; }
+
+        .dept-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 16px; }
+        .dept-item { padding: 20px; background: var(--toss-grey-bg); border-radius: 16px; transition: transform 0.3s cubic-bezier(0.2,0,0,1); }
+        .dept-item:hover { transform: translateY(-5px); }
+        .dept-icon { font-size: 24px; margin-bottom: 8px; display: block; }
+
+        .apply-btn {
+            display: block; width: 100%; padding: 18px;
+            background: var(--toss-blue); color: white;
+            border: none; border-radius: 16px; font-size: 17px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s cubic-bezier(0.175,0.885,0.32,1.275);
+            position: relative; overflow: hidden;
+        }
+        .apply-btn:hover   { background: var(--toss-blue-hover); transform: scale(1.02); }
+        .apply-btn:active  { transform: scale(0.96); }
+        .apply-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .ripple { position: absolute; background: rgba(0,0,0,0.1); transform: translate(-50%,-50%); pointer-events: none; border-radius: 50%; animation: ripple-effect 0.6s ease-out; }
+        @keyframes ripple-effect { from { width:0; height:0; opacity:0.5; } to { width:500px; height:500px; opacity:0; } }
+
+        .floating-action { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 400px; z-index: 90; }
+
+        /* ── 전체화면 모달 ───────────────────────────── */
+        .full-modal {
+            position: fixed; inset: 0; background-color: #fff; z-index: 200;
+            display: none; flex-direction: column; padding: 60px 24px 40px;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+            transform: translateX(100%); overflow-y: auto;
+        }
+        .full-modal.active { display: flex; transform: translateX(0); }
+
+        /* ── 중앙 소형 모달 (준비중/에러 공용) ──────── */
+        .center-modal {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%,-50%) scale(0.88);
+            background: #fff; z-index: 400;
+            width: calc(100% - 48px); max-width: 340px;
+            border-radius: 24px; padding: 32px 28px 26px;
+            display: none; box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+            text-align: center; opacity: 0;
+            transition: 0.28s cubic-bezier(0.16,1,0.3,1);
+        }
+        .center-modal.active { display: block; opacity: 1; transform: translate(-50%,-50%) scale(1); }
+        .modal-dim { position: fixed; inset: 0; background: rgba(0,0,0,0.38); z-index: 399; display: none; }
+
+        .modal-content { max-width: 500px; margin: 0 auto; width: 100%; }
+        .close-x { position: absolute; top: 20px; right: 24px; font-size: 28px; cursor: pointer; border: none; background: none; z-index: 1; }
+
+        input, textarea {
+            width: 100%; padding: 16px; border-radius: 14px;
+            border: 1px solid var(--toss-border); background: var(--toss-grey-bg);
+            font-size: 16px; margin-bottom: 12px; transition: 0.2s; font-family: inherit;
+        }
+        input:focus, textarea:focus { outline: none; border-color: var(--toss-blue); background: #fff; }
+
+        /* ── 성공/경고 오버레이 ──────────────────────── */
+        #successOverlay {
+            display: none; position: fixed; inset: 0; background: white; z-index: 300;
+            flex-direction: column; justify-content: center; align-items: center;
+        }
+        .check-circle {
+            width: 80px; height: 80px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            animation: bounce 0.5s cubic-bezier(0.175,0.885,0.32,1.5) forwards;
+        }
+        #overlayIconCircle svg           { width: 42px !important; height: 42px !important; }
+        #overlayIconCircle.is-warning svg { width: 80px !important; height: 80px !important; }
+        #wipIconWrap       svg           { width: 54px !important; height: 54px !important; }
+
+        @keyframes bounce { from { transform: scale(0); } to { transform: scale(1); } }
+
+        /* ── 대시보드 ─────────────────────────────────── */
+        .dash-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .dash-table th, .dash-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--toss-border); }
+        .dash-table th { font-size: 14px; color: var(--toss-sub-text); background: #f9fafb; }
+        .dash-table tr:hover { background-color: #fafafa; }
+        .filter-tabs { display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
+        .tab { padding: 10px 20px; background: #e5e8eb; border-radius: 12px; cursor: pointer; font-size: 14px; border: none; font-weight: 600; color: #4e5968; transition: 0.2s; white-space: nowrap; }
+        .tab.active { background: var(--toss-blue); color: white; }
+        .delete-btn { background: #ffe0e3; color: var(--toss-red); border: none; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; transition: 0.2s; position: relative; overflow: hidden; }
+        .delete-btn:hover { background: var(--toss-red); color: white; }
+
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .nickname { font-weight: 700; color: var(--toss-text); font-size: 15px; }
+
+        /* ── 로그인 탭 ───────────────────────────────────── */
+        .login-tabs {
+            display: flex; gap: 6px; margin-bottom: 28px;
+            background: var(--toss-grey-bg); border-radius: 14px; padding: 5px;
+        }
+        .login-tab {
+            flex: 1; padding: 10px; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 600; color: var(--toss-sub-text);
+            background: transparent; cursor: pointer; transition: all 0.2s;
+        }
+        .login-tab.active { background: white; color: var(--toss-text); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+        .field-label { display: block; font-size: 13px; color: var(--toss-blue); font-weight: 600; margin-left: 4px; }
+        .field-hint  { font-size: 12px; margin: -6px 0 10px 4px; min-height: 16px; }
+        .field-hint.ok  { color: #00b493; }
+        .field-hint.err { color: var(--toss-red); }
+
+        /* ── 회원가입 단계 표시 ──────────────────────────── */
+        .step-bar {
+            display: flex; align-items: center; margin-bottom: 32px;
+        }
+        .step-dot {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: #e5e8eb; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; color: var(--toss-sub-text);
+            flex-shrink: 0; transition: all 0.3s;
+        }
+        .step-dot.active   { background: var(--toss-blue); color: white; }
+        .step-dot.done     { background: #00b493; color: white; }
+        .step-line {
+            flex: 1; height: 2px; background: #e5e8eb; transition: background 0.3s;
+        }
+        .step-line.done { background: #00b493; }
+
+        /* 인증코드 입력 */
+        .code-input {
+            width: 100% !important;
+            text-align: center !important;
+            font-size: 32px !important;
+            font-weight: 800 !important;
+            letter-spacing: 10px !important;
+            padding: 20px !important;
+            border: 2px solid var(--toss-border) !important;
+            border-radius: 16px !important;
+            background: var(--toss-grey-bg) !important;
+            font-family: monospace !important;
+            margin-bottom: 0 !important;
+            transition: 0.2s !important;
+        }
+        .code-input:focus {
+            border-color: var(--toss-blue) !important;
+            background: #fff !important;
+            outline: none !important;
+        }
+
+        /* ── 엔터프라이즈 어드민 패널 ─────────────────── */
+        .admin-stats-grid {
+            display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 0;
+        }
+        @media (max-width: 700px) { .admin-stats-grid { grid-template-columns: repeat(2,1fr); } }
+        .stat-card {
+            background: #fff; border-radius: 20px; padding: 22px 24px;
+            display: flex; align-items: center; gap: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid var(--toss-border);
+        }
+        .stat-icon {
+            width: 48px; height: 48px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .stat-icon.blue   { background: #eff6ff; color: #3182f6; }
+        .stat-icon.green  { background: #ecfdf5; color: #00b493; }
+        .stat-icon.purple { background: #f5f3ff; color: #7c3aed; }
+        .stat-icon.orange { background: #fff7ed; color: #ea580c; }
+        .stat-icon svg { width: 22px; height: 22px; }
+        .stat-value { font-size: 28px; font-weight: 800; color: var(--toss-text); line-height: 1; }
+        .stat-label { font-size: 13px; color: var(--toss-sub-text); margin-top: 4px; font-weight: 500; }
+        .admin-main-card { padding: 0 !important; overflow: hidden; }
+        .admin-toolbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 24px 28px 0; gap: 12px; flex-wrap: wrap;
+        }
+        .admin-title-row { display: flex; align-items: center; gap: 10px; }
+        .admin-title-row h2 { font-size: 18px; font-weight: 800; }
+        .admin-badge {
+            background: var(--toss-blue); color: white;
+            font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+        }
+        .admin-toolbar-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .admin-search-wrap {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--toss-grey-bg); border-radius: 12px; padding: 10px 14px;
+            border: 1px solid var(--toss-border); min-width: 220px;
+        }
+        .admin-search-wrap svg { width: 16px; height: 16px; color: var(--toss-sub-text); flex-shrink: 0; }
+        .admin-search-wrap input {
+            border: none; background: none; outline: none;
+            font-size: 14px; width: 100%; margin: 0; padding: 0; font-family: inherit;
+        }
+        .admin-icon-btn {
+            width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--toss-border);
+            background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; color: var(--toss-sub-text);
+        }
+        .admin-icon-btn:hover { background: var(--toss-grey-bg); }
+        .admin-icon-btn svg { width: 16px; height: 16px; }
+        .admin-csv-btn {
+            display: flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 10px;
+            border: 1px solid var(--toss-border); background: #fff; cursor: pointer;
+            font-size: 13px; font-weight: 600; color: var(--toss-sub-text); transition: all 0.2s;
+        }
+        .admin-csv-btn:hover { background: var(--toss-grey-bg); }
+        .admin-csv-btn svg { width: 14px; height: 14px; }
+        .admin-filter-area { padding: 16px 28px 0; }
+        .admin-table-wrap { overflow-x: auto; }
+        .admin-main-card .dash-table th { padding: 12px 16px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; }
+        .admin-main-card .dash-table td { padding: 14px 16px; }
+        .admin-empty-state { text-align: center; padding: 60px 20px; color: var(--toss-sub-text); }
+        .admin-empty-state .empty-emoji { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+        .admin-empty-state p { font-size: 15px; margin-top: 4px; }
+        .admin-logout-bar {
+            padding: 18px 28px; border-top: 1px solid var(--toss-border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .admin-footer-info { font-size: 12px; color: var(--toss-sub-text); }
+        .user-tag {
+            display: inline-block; font-size: 12px; background: var(--toss-grey-bg);
+            padding: 3px 8px; border-radius: 6px; font-weight: 600;
+        }
+        .story-cell {
+            max-width: 160px; overflow: hidden; text-overflow: ellipsis;
+            white-space: nowrap; font-size: 13px; cursor: help;
+        }
+        @keyframes rowFade { to { opacity: 0; transform: translateX(16px); } }
+        .row-delete-anim { animation: rowFade 0.28s ease-out forwards; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-content">
+        <div class="logo" onclick="location.href='/'">JBS</div>
+        <div class="user-info" id="navAuthArea">
+            <div style="font-weight:600; font-size:15px;">중동중학교 방송부</div>
+            <button class="admin-login-btn" onclick="openModal('adminModal')">로그인</button>
+        </div>
+    </div>
+</nav>
+
+<div class="main-wrapper" id="mainPage">
+    <section class="hero card">
+        <h1>오늘 점심시간,<br>여러분의 플레이리스트를 채워드릴게요.</h1>
+        <p>중동의 모든 소식을 가장 빠르게, JBS 방송국</p>
+    </section>
+
+    <div class="content-area">
+        <div class="feature-grid">
+            <button class="feature-item" onclick="openApplyModal()">
+                <i data-lucide="music"></i><span>음악 신청</span>
+            </button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="megaphone"></i><span>공지사항</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="radio"></i><span>실시간 방송</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="users"></i><span>커뮤니티</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="image"></i><span>갤러리</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="calendar"></i><span>일정</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="trophy"></i><span>랭킹</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="history"></i><span>지난 방송</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="message-square"></i><span>건의함</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="help-circle"></i><span>FAQ</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="folder-open"></i><span>자료실</span></button>
+            <button class="feature-item" onclick="handleMockBtn(this)"><i data-lucide="user"></i><span>사용자</span></button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">오늘의 방송 시간표</div>
+            <div class="schedule-item"><span class="time">12:35</span><span>정규 오프닝 및 학교 소식 전달</span></div>
+            <div class="schedule-item"><span class="time">12:45</span><span>학생 신청곡 큐레이션 [진행: 이중동 아나운서]</span></div>
+            <div class="schedule-item"><span class="time">13:05</span><span>자율 청취 및 클로징</span></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">부서 안내</div>
+            <div class="dept-grid">
+                <div class="dept-item"><span class="dept-icon">🎤</span><strong>아나운서</strong><p style="font-size:13px; color:var(--toss-sub-text); margin-top:5px;">방송 진행 및 대본 작성</p></div>
+                <div class="dept-item"><span class="dept-icon">🎧</span><strong>엔지니어</strong><p style="font-size:13px; color:var(--toss-sub-text); margin-top:5px;">음향 믹싱 및 장비 운용</p></div>
+                <div class="dept-item"><span class="dept-icon">🎬</span><strong>영상제작</strong><p style="font-size:13px; color:var(--toss-sub-text); margin-top:5px;">학교 행사 및 영상 편집</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="card" style="position:sticky; top:100px;">
+            <div class="card-title">음악 신청</div>
+            <p style="font-size:14px; color:var(--toss-sub-text); margin-bottom:20px;">지금 바로 신청곡을 보내보세요.<br>선정된 곡은 점심시간에 방송됩니다.</p>
+            <button class="apply-btn" onclick="openApplyModal()">곡 신청하기</button>
+        </div>
+    </div>
+</div>
+
+<!-- 관리자 대시보드 -->
+<div class="main-wrapper" id="adminDashboard" style="display:none; grid-template-columns:1fr;">
+    <!-- 통계 카드 -->
+    <div class="admin-stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue"><i data-lucide="music"></i></div>
+            <div><div class="stat-value" id="statTotal">-</div><div class="stat-label">전체 신청</div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green"><i data-lucide="calendar"></i></div>
+            <div><div class="stat-value" id="statToday">-</div><div class="stat-label">오늘 신청</div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon purple"><i data-lucide="trending-up"></i></div>
+            <div><div class="stat-value" id="statWeek">-</div><div class="stat-label">이번 주</div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon orange"><i data-lucide="users"></i></div>
+            <div><div class="stat-value" id="statUsers">-</div><div class="stat-label">신청자 수</div></div>
+        </div>
+    </div>
+
+    <!-- 메인 카드 -->
+    <div class="card admin-main-card">
+        <div class="admin-toolbar">
+            <div class="admin-title-row">
+                <h2>신청곡 관리</h2>
+                <span class="admin-badge" id="adminBadgeCount">0건</span>
+            </div>
+            <div class="admin-toolbar-actions">
+                <div class="admin-search-wrap">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="adminSearch" placeholder="제목, 가수, 신청자 검색..." oninput="searchData(this.value)">
+                </div>
+                <button class="admin-icon-btn" onclick="showDashboard()" title="새로고침">
+                    <i data-lucide="refresh-cw"></i>
+                </button>
+                <button class="admin-csv-btn" onclick="exportCSV()">
+                    <i data-lucide="download"></i>CSV 내보내기
+                </button>
+            </div>
+        </div>
+        <div class="admin-filter-area">
+            <div class="filter-tabs">
+                <button class="tab active" onclick="filterData('all',this)">전체</button>
+                <button class="tab" onclick="filterData('week',this)">이번 주</button>
+                <button class="tab" onclick="filterData('today',this)">오늘</button>
+            </div>
+        </div>
+        <div class="admin-table-wrap">
+            <table class="dash-table">
+                <thead><tr><th>#</th><th>시간</th><th>제목</th><th>가수</th><th>사연</th><th>신청자</th><th>동작</th></tr></thead>
+                <tbody id="adminDataTable"></tbody>
+            </table>
+        </div>
+        <div class="admin-logout-bar">
+            <span class="admin-footer-info" id="adminFooterInfo">JBS 관리자 패널</span>
+            <button class="admin-login-btn" onclick="handleLogout()" style="color:var(--toss-red)">로그아웃</button>
+        </div>
+    </div>
+</div>
+
+<div class="floating-action" id="mobileAction">
+    <button class="apply-btn" onclick="openApplyModal()">노래 신청하기</button>
+</div>
+
+<!-- ── 음악 신청 모달 ── -->
+<div id="applyModal" class="full-modal">
+    <button class="close-x" onclick="closeModal('applyModal')">✕</button>
+    <div class="modal-content">
+        <h2 style="font-size:26px; margin-bottom:8px;">듣고 싶은 노래를<br>알려주세요</h2>
+        <p style="color:var(--toss-sub-text); margin-bottom:32px;">신청하신 곡은 사연과 함께 방송됩니다.</p>
+        <label style="font-size:13px; color:var(--toss-blue); font-weight:600; margin-left:4px;">곡 제목</label>
+        <input type="text" id="songTitle" placeholder="제목을 입력해주세요" autocomplete="off">
+        <label style="font-size:13px; color:var(--toss-blue); font-weight:600; margin-left:4px;">가수</label>
+        <input type="text" id="artist" placeholder="가수를 입력해주세요" autocomplete="off">
+        <label style="font-size:13px; color:var(--toss-blue); font-weight:600; margin-left:4px;">사연 (선택)</label>
+        <textarea rows="4" id="story" placeholder="방송에 읽어드릴 사연을 적어주세요"></textarea>
+        <div style="margin-top:20px;">
+            <button class="apply-btn" id="submitMusicBtn" onclick="submitMusic()">신청 완료</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── 로그인 모달 ── -->
+<div id="adminModal" class="full-modal">
+    <button class="close-x" onclick="closeModal('adminModal')">✕</button>
+    <div class="modal-content">
+
+        <div class="login-tabs">
+            <button class="login-tab active" id="tabStudent" onclick="switchLoginTab('student')">학생</button>
+            <button class="login-tab"        id="tabAdmin"   onclick="switchLoginTab('admin')">관리자</button>
+        </div>
+
+        <!-- 학생 탭 -->
+        <div id="sectionStudent">
+            <h2 style="font-size:24px; margin-bottom:6px; font-weight:800;">로그인</h2>
+            <p style="color:var(--toss-sub-text); margin-bottom:24px; font-size:14px;">학교 이메일과 비밀번호를 입력해주세요.</p>
+            <label class="field-label">학교 이메일</label>
+            <input type="email" id="loginEmail" placeholder="이메일 입력" autocomplete="off"
+                   onkeydown="if(event.key==='Enter') handleStudentLogin()">
+            <label class="field-label" style="margin-top:4px;">비밀번호</label>
+            <input type="password" id="loginPw" placeholder="비밀번호 입력"
+                   onkeydown="if(event.key==='Enter') handleStudentLogin()">
+            <div style="margin-top:20px;">
+                <button class="apply-btn" onclick="handleStudentLogin()">로그인</button>
+            </div>
+            <p style="text-align:center; margin-top:20px; font-size:14px; color:var(--toss-sub-text);">
+                처음이신가요?
+                <button onclick="openRegisterModal()" style="background:none;border:none;color:var(--toss-blue);font-weight:700;cursor:pointer;font-size:14px;">회원가입</button>
+            </p>
+        </div>
+
+        <!-- 관리자 탭 -->
+        <div id="sectionAdmin" style="display:none;">
+            <h2 style="font-size:24px; margin-bottom:6px; font-weight:800;">관리자 로그인</h2>
+            <p style="color:var(--toss-sub-text); margin-bottom:24px; font-size:14px;">관리자 계정으로 로그인하세요.</p>
+            <label class="field-label">아이디</label>
+            <input type="text" id="adminId" placeholder="아이디 입력" autocomplete="off">
+            <label class="field-label" style="margin-top:4px;">비밀번호</label>
+            <input type="password" id="adminPw" placeholder="비밀번호 입력"
+                   onkeydown="if(event.key==='Enter') handleAdminLogin()">
+            <div style="margin-top:20px;">
+                <button class="apply-btn" onclick="handleAdminLogin()">로그인</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ── 회원가입 모달 (3단계) ── -->
+<div id="registerModal" class="full-modal">
+    <button class="close-x" onclick="closeModal('registerModal')">✕</button>
+    <div class="modal-content">
+
+        <!-- 단계 표시 -->
+        <div class="step-bar">
+            <div class="step-dot active" id="dot1"></div>
+            <div class="step-line"       id="line12"></div>
+            <div class="step-dot"        id="dot2"></div>
+            <div class="step-line"       id="line23"></div>
+            <div class="step-dot"        id="dot3"></div>
+        </div>
+
+        <!-- Step 1: 이메일 입력 + 코드 발송 -->
+        <div id="regStep1">
+            <h2 style="font-size:24px; margin-bottom:6px; font-weight:800;">이메일 인증</h2>
+            <p style="color:var(--toss-sub-text); margin-bottom:24px; font-size:14px;">학교 이메일로 인증코드를 보내드려요.</p>
+            <label class="field-label">학교 이메일</label>
+            <input type="email" id="regEmail" placeholder="학교 이메일 입력" autocomplete="off"
+                   onkeydown="if(event.key==='Enter') sendVerificationCode()">
+            <p id="regEmailHint" class="field-hint"></p>
+            <div style="margin-top:20px;">
+                <button class="apply-btn" id="btnSendCode" onclick="sendVerificationCode()">인증코드 받기</button>
+            </div>
+        </div>
+
+        <!-- Step 2: 코드 입력 -->
+        <div id="regStep2" style="display:none;">
+            <h2 style="font-size:24px; margin-bottom:6px; font-weight:800;">인증코드 입력</h2>
+            <p style="color:var(--toss-sub-text); margin-bottom:6px; font-size:14px;">
+                <strong id="regEmailDisplay" style="color:var(--toss-text);"></strong>으로<br>인증코드를 발송했어요.
+            </p>
+            <p style="color:var(--toss-sub-text); margin-bottom:24px; font-size:13px;">스팸 메일함도 확인해주세요.</p>
+            <label class="field-label">인증코드 6자리</label>
+            <input type="text" id="regCode" class="code-input" placeholder="000000"
+                   maxlength="6" inputmode="numeric"
+                   onkeydown="if(event.key==='Enter') verifyCode()">
+            <div style="margin-top:20px;">
+                <button class="apply-btn" id="btnVerify" onclick="verifyCode()">인증 확인</button>
+            </div>
+            <p style="text-align:center; margin-top:16px; font-size:13px; color:var(--toss-sub-text);">
+                코드를 못 받으셨나요?
+                <button onclick="goBackToStep1()" style="background:none;border:none;color:var(--toss-blue);font-weight:700;cursor:pointer;font-size:13px;">다시 받기</button>
+            </p>
+        </div>
+
+        <!-- Step 3: 비밀번호 설정 -->
+        <div id="regStep3" style="display:none;">
+            <h2 style="font-size:24px; margin-bottom:6px; font-weight:800;">비밀번호 설정</h2>
+            <p style="color:var(--toss-sub-text); margin-bottom:24px; font-size:14px;">이메일 인증이 완료됐어요.<br>사용할 비밀번호를 설정해주세요.</p>
+            <label class="field-label">비밀번호 <span style="color:var(--toss-sub-text); font-weight:400;">(4자 이상)</span></label>
+            <input type="password" id="regPw" placeholder="비밀번호 입력">
+            <label class="field-label" style="margin-top:4px;">비밀번호 확인</label>
+            <input type="password" id="regPwConfirm" placeholder="비밀번호 재입력"
+                   onkeydown="if(event.key==='Enter') completeRegistration()">
+            <p id="regPwHint" class="field-hint"></p>
+            <div style="margin-top:20px;">
+                <button class="apply-btn" onclick="completeRegistration()">가입 완료</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ── 준비 중 모달 ── -->
+<div id="wipDim"   class="modal-dim"    onclick="closeWipModal()"></div>
+<div id="wipModal" class="center-modal">
+    <div id="wipIconWrap" style="display:flex; justify-content:center; margin-bottom:18px; color:var(--warn-orange);"></div>
+    <h3 style="font-size:20px; margin-bottom:10px; font-weight:800;">준비 중이에요</h3>
+    <p  style="color:var(--toss-sub-text); margin-bottom:24px; font-size:15px; line-height:1.65;">아직 준비 중인 기능이에요.<br>조금만 기다려 주세요!</p>
+    <button class="apply-btn" onclick="closeWipModal()" style="padding:14px;">확인</button>
+</div>
+
+<!-- ── 에러 모달 ── -->
+<div id="errorDim"   class="modal-dim"    onclick="closeErrorModal()"></div>
+<div id="errorModal" class="center-modal">
+    <h3 id="errorTitle" style="font-size:20px; margin-bottom:12px; font-weight:800;">안내</h3>
+    <p  id="errorMsg"   style="color:var(--toss-sub-text); margin-bottom:24px; font-size:15px;"></p>
+    <button class="apply-btn" onclick="closeErrorModal()" style="padding:14px;">확인</button>
+</div>
+
+<!-- ── 성공/경고 오버레이 ── -->
+<div id="successOverlay">
+    <div class="check-circle" id="overlayIconCircle"></div>
+    <h2 id="successText" style="margin-top:24px; font-weight:700; text-align:center; padding:0 20px;"></h2>
+</div>
+
+<script>
+    const BASE_URL = 'https://jbsserver.pythonanywhere.com';
+    const API_KEY  = 'JBS_INTERNAL_SECURE_KEY_2024';
+    let allData = [];
+
+    lucide.createIcons();
+
+    const _badWordsList = ['시발','지랄','개새끼','병신','미친','노무','일베'];
+    const filter = {
+        isProfane: function(t) {
+            if (typeof t !== 'string') return false;
+            return _badWordsList.some(function(w) { return t.includes(w); });
+        }
+    };
+
+    /* ════════════════════════════════════════════════
+       Lucide 아이콘 동적 주입 헬퍼
+       - container에 <i data-lucide="..."> 삽입 후 createIcons 호출
+       - shakeOnInsert: true면 좌우 흔들림 적용
+    ════════════════════════════════════════════════ */
+    function injectIcon(container, name, { color = 'currentColor', sw = '2', shake = false } = {}) {
+        container.innerHTML = `<i data-lucide="${name}" style="color:${color}; stroke-width:${sw};"></i>`;
+        lucide.createIcons();
+        if (shake) {
+            const svg = container.querySelector('svg');
+            if (svg) {
+                svg.style.animation = 'none';
+                svg.offsetHeight; // reflow
+                svg.style.animation = 'shakeLR 0.48s ease-in-out 3';
+            }
+        }
+    }
+
+    /* ════════════════════════════════════════════════
+       토스트 오버레이
+       타입: 'success' | 'error' | 'warning'  (또는 bool 하위호환)
+    ════════════════════════════════════════════════ */
+    function showToast(text, typeArg = 'success') {
+        const type = (typeof typeArg === 'boolean') ? (typeArg ? 'error' : 'success') : typeArg;
+
+        const overlay = document.getElementById('successOverlay');
+        const sText   = document.getElementById('successText');
+        const circle  = document.getElementById('overlayIconCircle');
+
+        sText.innerText = text;
+
+        // 바운스 리셋
+        circle.style.animation = 'none';
+        circle.offsetHeight;
+        circle.style.animation = 'bounce 0.5s cubic-bezier(0.175,0.885,0.32,1.5) forwards';
+
+        const map = {
+            success: { icon: 'check',        bg: 'var(--toss-blue)', sw: '3',   shake: false, warn: false },
+            error:   { icon: 'x',            bg: 'var(--toss-red)',  sw: '3',   shake: false, warn: false },
+            warning: { icon: 'alert-circle', bg: 'transparent',      sw: '2',   shake: true,  warn: true  }
+        };
+        const cfg = map[type] || map.success;
+
+        circle.style.background = cfg.bg;
+        circle.classList.toggle('is-warning', cfg.warn);
+        injectIcon(circle, cfg.icon, {
+            color: cfg.warn ? 'var(--warn-orange)' : 'white',
+            sw: cfg.sw,
+            shake: cfg.shake
+        });
+
+        overlay.style.display = 'flex';
+        setTimeout(() => { overlay.style.display = 'none'; }, 2200);
+    }
+
+    /* ════════════════════════════════════════════════
+       준비 중 모달
+    ════════════════════════════════════════════════ */
+    function openWipModal() {
+        injectIcon(
+            document.getElementById('wipIconWrap'),
+            'alert-circle',
+            { color: 'var(--warn-orange)', sw: '1.8', shake: true }
+        );
+        document.getElementById('wipDim').style.display = 'block';
+        const m = document.getElementById('wipModal');
+        m.style.display = 'block';
+        setTimeout(() => m.classList.add('active'), 10);
+    }
+    function closeWipModal() {
+        const m = document.getElementById('wipModal');
+        m.classList.remove('active');
+        setTimeout(() => {
+            m.style.display = 'none';
+            document.getElementById('wipDim').style.display = 'none';
+        }, 280);
+    }
+
+    /* 준비 중 버튼 클릭 처리 */
+    function handleMockBtn(btn) {
+        openWipModal();
+    }
+
+    /* ════════════════════════════════════════════════
+       로그인 탭 전환
+    ════════════════════════════════════════════════ */
+    function switchLoginTab(tab) {
+        document.getElementById('tabStudent').classList.toggle('active', tab === 'student');
+        document.getElementById('tabAdmin').classList.toggle('active',   tab === 'admin');
+        document.getElementById('sectionStudent').style.display = tab === 'student' ? '' : 'none';
+        document.getElementById('sectionAdmin').style.display   = tab === 'admin'   ? '' : 'none';
+    }
+
+    /* ════════════════════════════════════════════════
+       학생 로그인 (이메일 + 비밀번호)
+    ════════════════════════════════════════════════ */
+    async function handleStudentLogin() {
+        const email    = document.getElementById('loginEmail').value.trim().toLowerCase();
+        const password = document.getElementById('loginPw').value;
+        if (!email || !password) { showToast('이메일과 비밀번호를 입력해주세요.', 'warning'); return; }
+        if (!email.endsWith('@joongdong.ms.kr')) { showToast('학교 이메일을 입력해주세요.', 'warning'); return; }
+        try {
+            const res  = await fetch(`${BASE_URL}/api/user/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                localStorage.setItem('userNickname', data.username);
+                localStorage.setItem('userEmail',    data.email);
+                localStorage.setItem('loginMethod',  'student');
+                showToast('로그인됐어요!', 'success');
+                closeModal('adminModal');
+                updateAuthUI();
+            } else {
+                showToast(`[HTTP ${res.status}] ${data.message || '로그인에 실패했어요.'}`, 'error');
+            }
+        } catch (err) { showToast('네트워크 오류: ' + err.message, 'error'); }
+    }
+
+    /* ════════════════════════════════════════════════
+       회원가입 모달 열기 / 단계 초기화
+    ════════════════════════════════════════════════ */
+    function openRegisterModal() {
+        // 단계 초기화
+        goToRegStep(1);
+        document.getElementById('regEmail').value     = '';
+        document.getElementById('regCode').value      = '';
+        document.getElementById('regPw').value        = '';
+        document.getElementById('regPwConfirm').value = '';
+        document.getElementById('regEmailHint').textContent = '';
+        document.getElementById('regEmailHint').className   = 'field-hint';
+        document.getElementById('regPwHint').textContent    = '';
+        openModal('registerModal');
+    }
+
+    function goToRegStep(n) {
+        [1,2,3].forEach(i => {
+            document.getElementById(`regStep${i}`).style.display = i === n ? '' : 'none';
+        });
+        // 단계 표시 업데이트
+        [1,2,3].forEach(i => {
+            const dot = document.getElementById(`dot${i}`);
+            dot.classList.remove('active','done');
+            if      (i < n)  dot.classList.add('done');
+            else if (i === n) dot.classList.add('active');
+        });
+        if (document.getElementById('line12')) {
+            document.getElementById('line12').classList.toggle('done', n > 1);
+            document.getElementById('line23').classList.toggle('done', n > 2);
+        }
+    }
+
+    function goBackToStep1() {
+        document.getElementById('regCode').value = '';
+        goToRegStep(1);
+    }
+
+    /* ════════════════════════════════════════════════
+       Step 1: 인증코드 발송
+    ════════════════════════════════════════════════ */
+    async function sendVerificationCode() {
+        const email = document.getElementById('regEmail').value.trim().toLowerCase();
+        const hint  = document.getElementById('regEmailHint');
+        if (!email) { showToast('이메일을 입력해주세요.', 'warning'); return; }
+        if (!email.endsWith('@joongdong.ms.kr')) {
+            hint.textContent = '학교 이메일(@joongdong.ms.kr)만 사용할 수 있어요.';
+            hint.className   = 'field-hint err';
+            return;
+        }
+        hint.textContent = '';
+        const btn = document.getElementById('btnSendCode');
+        btn.disabled  = true;
+        btn.innerText = '전송 중...';
+        try {
+            const res  = await fetch(`${BASE_URL}/api/user/send-code`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                document.getElementById('regEmailDisplay').textContent = email;
+                goToRegStep(2);
+                setTimeout(() => document.getElementById('regCode').focus(), 200);
+            } else {
+                hint.textContent = `[HTTP ${res.status}] ${data.message || '전송에 실패했어요.'}`;
+                hint.className   = 'field-hint err';
+            }
+        } catch (err) {
+            hint.textContent = '네트워크 오류: ' + err.message;
+            hint.className   = 'field-hint err';
+        } finally {
+            btn.disabled  = false;
+            btn.innerText = '인증코드 받기';
+        }
+    }
+
+    /* ════════════════════════════════════════════════
+       Step 2: 인증코드 확인
+    ════════════════════════════════════════════════ */
+    async function verifyCode() {
+        const email = document.getElementById('regEmail').value.trim().toLowerCase();
+        const code  = document.getElementById('regCode').value.trim();
+        if (code.length !== 6) { showToast('6자리 코드를 입력해주세요.', 'warning'); return; }
+        const btn = document.getElementById('btnVerify');
+        btn.disabled  = true;
+        btn.innerText = '확인 중...';
+        try {
+            const res  = await fetch(`${BASE_URL}/api/user/verify-code`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
+                body: JSON.stringify({ email, code })
+            });
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                goToRegStep(3);
+                setTimeout(() => document.getElementById('regPw').focus(), 200);
+            } else {
+                showToast(`[HTTP ${res.status}] ${data.message || '코드가 올바르지 않아요.'}`, 'error');
+            }
+        } catch (err) { showToast('네트워크 오류: ' + err.message, 'error'); }
+        finally {
+            btn.disabled  = false;
+            btn.innerText = '인증 확인';
+        }
+    }
+
+    /* ════════════════════════════════════════════════
+       Step 3: 비밀번호 설정 + 가입 완료
+    ════════════════════════════════════════════════ */
+    async function completeRegistration() {
+        const email   = document.getElementById('regEmail').value.trim().toLowerCase();
+        const pw      = document.getElementById('regPw').value;
+        const confirm = document.getElementById('regPwConfirm').value;
+        const hint    = document.getElementById('regPwHint');
+        if (!pw || !confirm) { showToast('비밀번호를 입력해주세요.', 'warning'); return; }
+        if (pw.length < 4)   { showToast('비밀번호는 4자 이상이어야 해요.', 'warning'); return; }
+        if (pw !== confirm) {
+            hint.textContent = '비밀번호가 일치하지 않아요.';
+            hint.className   = 'field-hint err';
+            return;
+        }
+        hint.textContent = '';
+        try {
+            const res  = await fetch(`${BASE_URL}/api/user/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
+                body: JSON.stringify({ email, password: pw })
+            });
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                showToast('가입이 완료됐어요! 로그인해주세요.', 'success');
+                closeModal('registerModal');
+                // 로그인 모달로 전환
+                setTimeout(() => {
+                    document.getElementById('loginEmail').value = email;
+                    openModal('adminModal');
+                }, 400);
+            } else {
+                showToast(`[HTTP ${res.status}] ${data.message || '가입에 실패했어요.'}`, 'error');
+            }
+        } catch (err) { showToast('네트워크 오류: ' + err.message, 'error'); }
+    }
+
+    /* ════════════════════════════════════════════════
+       음악 신청 버튼 — 비로그인 시 로그인 모달로
+    ════════════════════════════════════════════════ */
+    function openApplyModal() {
+        if (!localStorage.getItem('userNickname')) {
+            showToast('로그인 후 음악 신청이 가능해요.', 'warning');
+            setTimeout(() => openModal('adminModal'), 350);
+            return;
+        }
+        openModal('applyModal');
+    }
+
+    /* ════════════════════════════════════════════════
+       음악 신청 (완전 재작성 - 백엔드 직접 호출)
+    ════════════════════════════════════════════════ */
+    async function submitMusic() {
+        const title    = document.getElementById('songTitle').value.trim();
+        const artist   = document.getElementById('artist').value.trim();
+        const story    = document.getElementById('story').value.trim();
+        const userName = localStorage.getItem('userNickname') || '익명';
+
+        if (!title || !artist) { showToast('곡 제목과 가수를 입력해주세요!', 'warning'); return; }
+        for (const t of [title, artist, story].filter(Boolean)) {
+            if (filter.isProfane(t)) { showToast('욕설이 포함되어 있습니다.', 'warning'); return; }
+        }
+
+        const btn = document.getElementById('submitMusicBtn');
+        btn.disabled  = true;
+        btn.innerText = '전송 중...';
+
+        try {
+            const res = await fetch(`${BASE_URL}/api/music/submit`, {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY },
+                body:    JSON.stringify({ title, artist, story, userName })
+            });
+            const data = await res.json();
+
+            if (res.ok && data.status === 'success') {
+                document.getElementById('songTitle').value = '';
+                document.getElementById('artist').value    = '';
+                document.getElementById('story').value     = '';
+                closeModal('applyModal');
+                showToast('신청이 완료됐어요! 🎵', 'success');
+            } else {
+                showToast(`[HTTP ${res.status}] ${data.message || '신청에 실패했어요.'}`, 'error');
+            }
+        } catch (err) {
+            showToast('네트워크 오류: ' + err.message, 'error');
+        } finally {
+            btn.disabled  = false;
+            btn.innerText = '신청 완료';
+        }
+    }
+
+    /* ════════════════════════════════════════════════
+       모달 유틸 — History API 기반 (? 없이 경로 변경)
+       /login  /apply  /register  → 뒤로가기로 닫힘
+    ════════════════════════════════════════════════ */
+    const MODAL_PATHS = {
+        adminModal:    '/login',
+        applyModal:    '/apply',
+        registerModal: '/register',
+    };
+
+    function openModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.display = 'flex';
+        setTimeout(() => el.classList.add('active'), 10);
+        document.body.style.overflow = 'hidden';
+        const path = MODAL_PATHS[id] || '/' + id;
+        window.history.pushState({ modal: id }, '', path);
+    }
+
+    function closeModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove('active');
+        setTimeout(() => { el.style.display = 'none'; }, 400);
+        document.body.style.overflow = 'auto';
+        // 현재 경로가 이 모달 경로면 뒤로 이동
+        const path = MODAL_PATHS[id] || '/' + id;
+        if (window.location.pathname === path) window.history.back();
+    }
+
+    function showErrorModal(msg) {
+        document.getElementById('errorMsg').innerText = msg;
+        document.getElementById('errorDim').style.display = 'block';
+        const m = document.getElementById('errorModal');
+        m.style.display = 'block';
+        setTimeout(() => m.classList.add('active'), 10);
+    }
+    function closeErrorModal() {
+        const m = document.getElementById('errorModal');
+        m.classList.remove('active');
+        setTimeout(() => {
+            m.style.display = 'none';
+            document.getElementById('errorDim').style.display = 'none';
+        }, 280);
+    }
+
+    // 뒤로가기 → 열린 모달 닫기
+    window.addEventListener('popstate', () => {
+        document.querySelectorAll('.full-modal.active').forEach(m => {
+            m.classList.remove('active');
+            setTimeout(() => { m.style.display = 'none'; }, 400);
+        });
+        document.body.style.overflow = 'auto';
+    });
+
+    // 페이지 진입 시 경로에 맞는 모달 자동 오픈
+    (function handleInitialPath() {
+        const path = window.location.pathname;
+        const entry = Object.entries(MODAL_PATHS).find(([, p]) => p === path);
+        if (entry) {
+            const [id] = entry;
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.display = 'flex';
+                setTimeout(() => el.classList.add('active'), 10);
+                document.body.style.overflow = 'hidden';
+            }
+        }
+    })();
+    async function handleAdminLogin() {
+        const id = document.getElementById('adminId').value.trim();
+        const pw = document.getElementById('adminPw').value;
+        if (!id || !pw) { showErrorModal('정보를 모두 입력해주세요.'); return; }
+        try {
+            const res  = await fetch(`${BASE_URL}/api/admin/login`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-JBS-KEY': API_KEY }, body: JSON.stringify({ id, pw }) });
+            const data = await res.json();
+            if (res.ok && data.admin_token) {
+                localStorage.setItem('adminToken',   data.admin_token);
+                localStorage.setItem('userNickname', id);
+                localStorage.setItem('loginMethod',  'admin');
+                showToast('로그인에 성공했어요', 'success');
+                closeModal('adminModal');
+                updateAuthUI();
+                if (id === 'admin') showDashboard();
+            } else { showErrorModal(`[HTTP ${res.status}] 로그인 정보가 틀렸습니다.`); }
+        } catch (err) { showErrorModal('네트워크 오류: ' + err.message); }
+    }
+    function handleLogout() {
+        ['adminToken','userNickname','userEmail','loginMethod'].forEach(k => localStorage.removeItem(k));
+        location.reload();
+    }
+    function updateAuthUI() {
+        const nick = localStorage.getItem('userNickname');
+        if (!nick) return;
+        document.getElementById('navAuthArea').innerHTML = `
+            <span class="nickname">${nick}님</span>
+            <button class="admin-login-btn" onclick="handleLogout()" style="color:var(--toss-red)">로그아웃</button>`;
+    }
+
+    /* ════════════════════════════════════════════════
+       대시보드
+    ════════════════════════════════════════════════ */
+    async function showDashboard() {
+        const token = localStorage.getItem('adminToken');
+        if (!token) return;
+        document.getElementById('mainPage').style.display     = 'none';
+        document.getElementById('mobileAction').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'grid';
+        try {
+            const res = await fetch(`${BASE_URL}/api/admin/data`, { headers: { 'X-JBS-KEY': API_KEY, 'X-Admin-Token': token } });
+            if (!res.ok) { handleLogout(); return; }
+            allData = await res.json();
+            updateStats(allData);
+            renderTable(allData);
+            lucide.createIcons();
+        } catch (err) { showToast('데이터 로드 실패: ' + err.message, 'warning'); }
+    }
+    function updateStats(data) {
+        const now = new Date();
+        const todayStr = now.toDateString();
+        const weekAgo  = new Date(now - 7 * 86400000);
+        const todayCount  = data.filter(d => new Date(d.timestamp).toDateString() === todayStr).length;
+        const weekCount   = data.filter(d => new Date(d.timestamp) > weekAgo).length;
+        const uniqueUsers = new Set(data.map(d => d.user_name).filter(Boolean)).size;
+        document.getElementById('statTotal').textContent = data.length;
+        document.getElementById('statToday').textContent = todayCount;
+        document.getElementById('statWeek').textContent  = weekCount;
+        document.getElementById('statUsers').textContent = uniqueUsers;
+        document.getElementById('adminBadgeCount').textContent = data.length + '건';
+        document.getElementById('adminFooterInfo').textContent =
+            `마지막 업데이트: ${now.toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}`;
+    }
+    function renderTable(data) {
+        const tbody = document.getElementById('adminDataTable');
+        tbody.innerHTML = '';
+        document.getElementById('adminBadgeCount').textContent = data.length + '건';
+        if (!data.length) {
+            tbody.innerHTML = `<tr><td colspan="7"><div class="admin-empty-state"><div class="empty-emoji">🎵</div><p>신청된 곡이 없어요</p></div></td></tr>`;
+            return;
+        }
+        data.forEach((item, idx) => {
+            const d = new Date(item.timestamp).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+            const storyHtml = item.story
+                ? `<span class="story-cell" title="${item.story}">${item.story}</span>`
+                : `<span style="color:#c1c5cc">-</span>`;
+            tbody.innerHTML += `<tr id="row-${item.id}">
+                <td data-label="#" style="font-size:12px;color:#c1c5cc;font-weight:700">${idx+1}</td>
+                <td data-label="시간" style="white-space:nowrap"><span style="font-size:12px;color:var(--toss-sub-text)">${d}</span></td>
+                <td data-label="제목"><span style="font-weight:700">${item.title}</span></td>
+                <td data-label="가수" style="color:var(--toss-sub-text)">${item.artist}</td>
+                <td data-label="사연">${storyHtml}</td>
+                <td data-label="신청자"><span class="user-tag">${item.user_name||'익명'}</span></td>
+                <td data-label="동작"><button class="delete-btn" onclick="deleteRequest(${item.id})">삭제</button></td>
+            </tr>`;
+        });
+    }
+    function filterData(type, btn) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        const searchEl = document.getElementById('adminSearch');
+        if (searchEl) searchEl.value = '';
+        const now = new Date();
+        let filtered = allData;
+        if      (type === 'today') filtered = allData.filter(d => new Date(d.timestamp).toDateString() === now.toDateString());
+        else if (type === 'week')  { const wa = new Date(now - 7*86400000); filtered = allData.filter(d => new Date(d.timestamp) > wa); }
+        renderTable(filtered);
+    }
+    function searchData(q) {
+        q = q.toLowerCase().trim();
+        const filtered = q ? allData.filter(d =>
+            (d.title||'').toLowerCase().includes(q) ||
+            (d.artist||'').toLowerCase().includes(q) ||
+            (d.user_name||'').toLowerCase().includes(q) ||
+            (d.story||'').toLowerCase().includes(q)
+        ) : allData;
+        renderTable(filtered);
+    }
+    function exportCSV() {
+        if (!allData.length) { showToast('내보낼 데이터가 없어요.', 'warning'); return; }
+        const header = ['번호','시간','제목','가수','사연','신청자'];
+        const rows = allData.map((d, i) => [
+            i+1,
+            new Date(d.timestamp).toLocaleString('ko-KR'),
+            `"${(d.title||'').replace(/"/g,'""')}"`,
+            `"${(d.artist||'').replace(/"/g,'""')}"`,
+            `"${(d.story||'').replace(/"/g,'""')}"`,
+            d.user_name||'익명'
+        ]);
+        const csv = '\uFEFF' + [header, ...rows].map(r => r.join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `JBS_신청곡_${new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','')}csv`;
+        a.click();
+        showToast('CSV 파일을 다운로드했어요.', 'success');
+    }
+    async function deleteRequest(id) {
+        if (!confirm('정말 삭제하시겠습니까?')) return;
+        const token = localStorage.getItem('adminToken');
+        const row = document.getElementById(`row-${id}`);
+        if (row) { row.classList.add('row-delete-anim'); await new Promise(r => setTimeout(r, 280)); }
+        try {
+            const r = await fetch(`${BASE_URL}/api/admin/delete/${id}`, { method: 'DELETE', headers: { 'X-JBS-KEY': API_KEY, 'X-Admin-Token': token } });
+            if (r.ok) showDashboard();
+        } catch (err) { showToast('삭제 실패: ' + err.message, 'warning'); }
+    }
+
+    /* 리플 */
+    document.addEventListener('click', e => {
+        const btn = e.target.closest('.apply-btn,.admin-login-btn,.delete-btn,.tab');
+        if (btn) {
+            const r = document.createElement('span'); r.classList.add('ripple');
+            const rect = btn.getBoundingClientRect();
+            r.style.left = `${e.clientX - rect.left}px`; r.style.top = `${e.clientY - rect.top}px`;
+            btn.appendChild(r); setTimeout(() => r.remove(), 600);
+        }
+    });
+
+    function checkMobileButton() {
+        const ma = document.getElementById('mobileAction');
+        ma.style.display = (window.innerWidth > 850 || document.getElementById('adminDashboard').style.display === 'grid') ? 'none' : 'block';
+    }
+    window.addEventListener('resize', checkMobileButton);
+
+    window.addEventListener('load', () => {
+        updateAuthUI();
+        checkMobileButton();
+        if (localStorage.getItem('userNickname') === 'admin' && localStorage.getItem('adminToken')) showDashboard();
+    });
+</script>
+</body>
+</html>
